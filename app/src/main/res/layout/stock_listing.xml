@@ -6,11 +6,11 @@
     android:layout_height="wrap_content"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
-    android:paddingStart="8dp">
+    android:paddingStart="16dp">
 
 
     <TextView
-        android:id="@+id/stock"
+        android:id="@+id/portfolioHeading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="stock_name"
@@ -21,13 +21,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/subtitle"
+        android:id="@+id/sharesOwned"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="subtitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stock" />
+        app:layout_constraintTop_toBottomOf="@+id/portfolioHeading" />
 
     <TextView
         android:id="@+id/stockPrice"

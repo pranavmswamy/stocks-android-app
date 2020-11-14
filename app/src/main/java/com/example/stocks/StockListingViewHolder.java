@@ -13,10 +13,10 @@ public class StockListingViewHolder extends RecyclerView.ViewHolder {
 
     public StockListingViewHolder(View stockListingView) {
         super(stockListingView);
-        stockName = stockListingView.findViewById(R.id.stock);
+        stockName = stockListingView.findViewById(R.id.portfolioHeading);
         stockPrice = stockListingView.findViewById(R.id.stockPrice);
         change = stockListingView.findViewById(R.id.change);
-        subtitle = stockListingView.findViewById(R.id.subtitle);
+        subtitle = stockListingView.findViewById(R.id.sharesOwned);
     }
 
     public TextView getStockName() {

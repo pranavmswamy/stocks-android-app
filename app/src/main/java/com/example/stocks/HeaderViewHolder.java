@@ -12,7 +12,7 @@ public class HeaderViewHolder extends RecyclerView.ViewHolder {
 
     public HeaderViewHolder(@NonNull View itemView) {
         super(itemView);
-        title = itemView.findViewById(R.id.tvTitle);
+        title = itemView.findViewById(R.id.header);
     }
 
     public TextView getTitle() {
