@@ -19,7 +19,7 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters;
 public class WatchlistSection extends Section {
 
     private final PortfolioSection portfolio;
-    private List<String> watchlist = new ArrayList<String>(Arrays.asList("wl1", "wl2", "wl3"));
+    private ArrayList<String> watchlist = new ArrayList<String>(Arrays.asList("wl1", "wl2", "wl3"));
     private RecyclerView parentRecyclerView;
     /**
      * Create a Section object based on {@link SectionParameters}.
@@ -29,7 +29,7 @@ public class WatchlistSection extends Section {
         this.parentRecyclerView = recyclerView;
         this.portfolio = portfolioSection;
 
-        SwipeAndMoveCallback swipeAndMoveCallback = new SwipeAndMoveCallback(parentContext) {
+        /*SwipeAndMoveCallback swipeAndMoveCallback = new SwipeAndMoveCallback(parentContext) {
 
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -66,7 +66,7 @@ public class WatchlistSection extends Section {
         };
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeAndMoveCallback);
-        itemTouchHelper.attachToRecyclerView(parentRecyclerView);
+        itemTouchHelper.attachToRecyclerView(parentRecyclerView);*/
     }
 
     @Override
@@ -100,5 +100,7 @@ public class WatchlistSection extends Section {
 
     }
 
-
+    public ArrayList<String> getWatchlist() {
+        return watchlist;
+    }
 }

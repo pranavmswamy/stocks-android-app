@@ -18,7 +18,7 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters;
 
 public class PortfolioSection extends Section {
 
-    private List<String> portfolio = new ArrayList<String>(Arrays.asList("stock1", "stock2", "stock3"));
+    private ArrayList<String> portfolio = new ArrayList<String>(Arrays.asList("stock1", "stock2", "stock3"));
     private RecyclerView parentRecyclerView;
     /**
      * Create a Section object based on {@link SectionParameters}.
@@ -28,7 +28,7 @@ public class PortfolioSection extends Section {
         this.parentRecyclerView = recyclerView;
 
 
-        DragToMoveCallback dragCallback = new DragToMoveCallback() {
+        /*DragToMoveCallback dragCallback = new DragToMoveCallback() {
 
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -59,7 +59,7 @@ public class PortfolioSection extends Section {
 
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(dragCallback);
-        itemTouchHelper.attachToRecyclerView(parentRecyclerView);
+        itemTouchHelper.attachToRecyclerView(parentRecyclerView);*/
 
     }
 
@@ -94,5 +94,9 @@ public class PortfolioSection extends Section {
         headerHolder.getAmount().setText("20000.00");
 
 
+    }
+
+    public ArrayList<String> getPortfolio() {
+        return portfolio;
     }
 }

@@ -11,11 +11,14 @@
         android:roundIcon="@mipmap/ic_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".DetailsActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".SplashScreenActivity"
+            android:theme="@style/Theme.Stocks.Launcher">
+        </activity>
+        <activity android:name=".DetailsActivity" />
+        <activity android:name=".MainActivity"
+            android:theme="@style/Theme.Stocks.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

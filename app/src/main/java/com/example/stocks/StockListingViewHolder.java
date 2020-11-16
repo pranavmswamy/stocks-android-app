@@ -1,6 +1,9 @@
 package com.example.stocks;
 
+import android.content.Intent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,6 +13,7 @@ public class StockListingViewHolder extends RecyclerView.ViewHolder {
     private TextView stockPrice;
     private TextView change;
     private TextView subtitle;
+    ImageButton details;
 
     public StockListingViewHolder(View stockListingView) {
         super(stockListingView);
@@ -17,6 +21,15 @@ public class StockListingViewHolder extends RecyclerView.ViewHolder {
         stockPrice = stockListingView.findViewById(R.id.stockPrice);
         change = stockListingView.findViewById(R.id.change);
         subtitle = stockListingView.findViewById(R.id.sharesOwned);
+        details = stockListingView.findViewById(R.id.detailsButton);
+
+        details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goToDetails = new Intent(stockListingView.getContext(), DetailsActivity.class);
+                stockListingView.getContext().startActivity(goToDetails);
+            }
+        });
     }
 
     public TextView getStockName() {

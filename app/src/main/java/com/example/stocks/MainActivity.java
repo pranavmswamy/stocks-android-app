@@ -31,12 +31,19 @@ public class MainActivity extends AppCompatActivity {
 
         PortfolioSection portfolio = new PortfolioSection(this, recyclerView);
         WatchlistSection watchlist = new WatchlistSection(this, recyclerView, portfolio);
+        Footer footer = new Footer();
+
 
         sectionAdapter.addSection(portfolio);
         sectionAdapter.addSection(watchlist);
+        sectionAdapter.addSection(footer);
+
 
         recyclerView.setAdapter(sectionAdapter);
 
+        SwipeAndMoveCallback swipeAndMoveCallback = new SwipeAndMoveCallback(this, portfolio.getPortfolio(), watchlist.getWatchlist(), recyclerView);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeAndMoveCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     @Override
