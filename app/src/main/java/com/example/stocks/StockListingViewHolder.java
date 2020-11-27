@@ -27,6 +27,7 @@ public class StockListingViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 Intent goToDetails = new Intent(stockListingView.getContext(), DetailsActivity.class);
+                goToDetails.putExtra("stock", "goog");
                 stockListingView.getContext().startActivity(goToDetails);
             }
         });

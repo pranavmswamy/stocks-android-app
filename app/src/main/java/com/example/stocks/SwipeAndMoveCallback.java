@@ -97,6 +97,11 @@ public class SwipeAndMoveCallback extends ItemTouchHelper.Callback {
                     break;
             }
         }
+        else if(position <= portfolio.size() &&
+                position > 0) {
+            parentRecyclerView.getAdapter().notifyDataSetChanged();
+            //Log.d("tag", "onSwiped: " + parentRecyclerView.getAdapter());
+        }
     }
 
     @Override

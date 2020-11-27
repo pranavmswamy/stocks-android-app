@@ -69,20 +69,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="20dp"
                     android:text="change"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toStartOf="@+id/detailsButton"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/stockPrice" />
-
-                <ImageButton
-                    android:id="@+id/detailsButton"
-                    android:layout_width="20dp"
-                    android:layout_height="31dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/stockPrice"
-                    app:layout_constraintStart_toEndOf="@+id/stockPrice"
-                    app:layout_constraintTop_toBottomOf="@+id/stockPrice"
-                    app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24" />
 
                 <ImageView
                     android:id="@+id/trendingImage"
@@ -98,7 +90,7 @@
             <WebView
                 android:id="@+id/webView"
                 android:layout_width="match_parent"
-                android:layout_height="300dp">
+                android:layout_height="400dp">
 
             </WebView>
 
@@ -117,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="stock_name"
+                    android:text="Portfolio"
                     android:textColor="@color/black"
                     android:textSize="24sp"
                     android:textStyle="bold"
@@ -199,7 +191,7 @@
                             android:text="Current Price:" />
 
                         <TextView
-                            android:id="@+id/textView12"
+                            android:id="@+id/currentPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="16dp"
@@ -212,7 +204,7 @@
                             android:text="Low:" />
 
                         <TextView
-                            android:id="@+id/textView18"
+                            android:id="@+id/low"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="16dp"
@@ -225,7 +217,7 @@
                             android:text="Bid Price:" />
 
                         <TextView
-                            android:id="@+id/textView20"
+                            android:id="@+id/bidPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="-" />
@@ -244,7 +236,7 @@
                             android:text="Open Price:" />
 
                         <TextView
-                            android:id="@+id/textView14"
+                            android:id="@+id/openPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="-" />
@@ -256,7 +248,7 @@
                             android:text="Mid:" />
 
                         <TextView
-                            android:id="@+id/textView22"
+                            android:id="@+id/mid"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="-" />
@@ -268,7 +260,7 @@
                             android:text="High:" />
 
                         <TextView
-                            android:id="@+id/textView24"
+                            android:id="@+id/high"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="-" />
@@ -287,7 +279,7 @@
                             android:text="Volume:" />
 
                         <TextView
-                            android:id="@+id/textView16"
+                            android:id="@+id/volume"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="-" />
@@ -316,7 +308,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView26"
+                    android:id="@+id/about"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"

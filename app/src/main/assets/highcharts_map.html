@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Chart</title>
+</head>
+
+<body>
+<div id="container" style="height: 100%; width: 100%"></div>
+
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/data.js"></script>
+<script src="https://code.highcharts.com/stock/modules/drag-panes.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/stock/indicators/indicators.js"></script>
+<script src="https://code.highcharts.com/stock/indicators/volume-by-price.js"></script>
+<script language="JavaScript">
+
+    function plot(ticker) {
+
+    let resampleFreq = "daily"
+    let curDate = new Date()
+    let twoYearsAgo = `${curDate.getFullYear()-2}-${curDate.getMonth()+1}-${curDate.getDate()}`
+    console.log('2yrsago-', twoYearsAgo)
+    const historicalDataUrl = `http://trialnodejsbackend-env.eba-stk2e7fk.us-east-1.elasticbeanstalk.com/historical-data?companyName=${ticker}&startDate=${twoYearsAgo}&resampleFreq=${resampleFreq}`
+    console.log('historical data- ', historicalDataUrl)
+
+    Highcharts.getJSON(historicalDataUrl, function (historicalData) {
+
+    //document.getElementById("test").innerHTML = "entered highcharts fn";
+
+    let ohlc = []
+    let volume = []
+    let spline_data = []
+    var groupingUnits = []
+
+        groupingUnits.push(['week',[1]]);
+        groupingUnits.push(['month',[1, 2, 3, 4, 6]]);
+
+        for(let i=0; i<historicalData.length; i++) {
+          let currentTime = new Date(historicalData[i]['date'])
+          let convertedTime = Date.UTC(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), currentTime.getHours()-9, currentTime.getMinutes(), currentTime.getSeconds(), currentTime.getMilliseconds());
+          ohlc.push([
+            convertedTime,
+            historicalData[i]['open'],
+            historicalData[i]['high'],
+            historicalData[i]['low'],
+            historicalData[i]['close']
+          ])
+
+          volume.push([
+            convertedTime,
+            parseInt(historicalData[i]['volume'])
+          ])
+
+          spline_data.push([
+            convertedTime,
+            historicalData[i]['close']
+          ])
+        }
+
+
+    // create the chart
+    Highcharts.stockChart('container', {
+
+          rangeSelector: {
+              selected: 2
+          },
+
+          title: {
+              text: `${ticker.toUpperCase()} Historical`
+          },
+
+          subtitle: {
+              text: 'With SMA and Volume by Price technical indicators'
+          },
+
+          yAxis: [{
+              startOnTick: false,
+              endOnTick: false,
+              labels: {
+                  align: 'right',
+                  x: -3
+              },
+              title: {
+                  text: 'OHLC'
+              },
+              height: '60%',
+              lineWidth: 2,
+              resize: {
+                  enabled: true
+              }
+          }, {
+              labels: {
+                  align: 'right',
+                  x: -3
+              },
+              title: {
+                  text: 'Volume'
+              },
+              top: '65%',
+              height: '35%',
+              offset: 0,
+              lineWidth: 2
+          }],
+
+          tooltip: {
+              split: true
+          },
+
+          plotOptions: {
+              series: {
+                  dataGrouping: {
+                      units: groupingUnits
+                  }
+              }
+          },
+
+          series: [{
+              type: 'candlestick',
+              name: ticker.toUpperCase(),
+              id: 'aapl',
+              zIndex: 2,
+              data: ohlc
+          }, {
+              type: 'column',
+              name: 'Volume',
+              id: 'volume',
+              data: volume,
+              yAxis: 1
+          }, {
+              type: 'vbp',
+              linkedTo: 'aapl',
+              params: {
+                  volumeSeriesID: 'volume'
+              },
+              dataLabels: {
+                  enabled: false
+              },
+              zoneLines: {
+                  enabled: false
+              }
+          }, {
+              type: 'sma',
+              linkedTo: 'aapl',
+              zIndex: 1,
+              marker: {
+                  enabled: false
+              }
+          }]
+      });
+});
+
+    }
+
+</script>
+</body>
+</html>
