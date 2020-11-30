@@ -1,6 +1,7 @@
 package com.example.stocks;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Set;
 
 public class SwipeAndMoveCallback extends ItemTouchHelper.Callback {
 
@@ -28,11 +30,11 @@ public class SwipeAndMoveCallback extends ItemTouchHelper.Callback {
     private Drawable deleteDrawable;
     private int intrinsicWidth;
     private int intrinsicHeight;
-    private ArrayList<String> portfolio;
-    private  ArrayList<String> watchlist;
+    private ArrayList<StockListingDataModel> portfolio;
+    private  ArrayList<StockListingDataModel> watchlist;
     private RecyclerView parentRecyclerView;
 
-    SwipeAndMoveCallback(Context context, ArrayList<String> portfolio, ArrayList<String> watchlist, RecyclerView parentRecyclerView) {
+    SwipeAndMoveCallback(Context context, ArrayList<StockListingDataModel> portfolio, ArrayList<StockListingDataModel> watchlist, RecyclerView parentRecyclerView) {
         mContext = context;
         mBackground = new ColorDrawable();
         backgroundColor = Color.parseColor("#b80f0a");
@@ -92,6 +94,17 @@ public class SwipeAndMoveCallback extends ItemTouchHelper.Callback {
             switch (direction) {
                 case ItemTouchHelper.LEFT:
                     Log.e("tag", "onSwiped: "+"item being removed" );
+
+                    SharedPreferences sharedPreferences = mContext.getSharedPreferences("stock_app", 0);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                    Set<String> watchlistSetSharedPref = sharedPreferences.getStringSet("favorites", null);
+                    watchlistSetSharedPref.remove(watchlist.get(position - portfolio.size() - 2).ticker.toLowerCase());
+                    editor.putStringSet("favorites", watchlistSetSharedPref);
+                    editor.commit();
+
+                    Log.e("adfa", "onSwiped: after removal " + watchlistSetSharedPref );
+
                     watchlist.remove( position - portfolio.size() - 2);
                     parentRecyclerView.getAdapter().notifyItemRemoved(position);
                     break;

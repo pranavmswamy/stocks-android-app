@@ -16,7 +16,10 @@
         <activity android:name=".SplashScreenActivity"
             android:theme="@style/Theme.Stocks.Launcher">
         </activity>
-        <activity android:name=".DetailsActivity" />
+        <activity android:name=".DetailsActivity"
+            android:theme="@style/Theme.Stocks">
+
+        </activity>
         <activity android:name=".MainActivity"
             android:theme="@style/Theme.Stocks.Launcher">
             <intent-filter>

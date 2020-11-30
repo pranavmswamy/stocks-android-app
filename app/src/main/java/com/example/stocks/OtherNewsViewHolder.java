@@ -35,7 +35,7 @@ public class OtherNewsViewHolder extends RecyclerView.ViewHolder {
         card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                v.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
             }
         });
 

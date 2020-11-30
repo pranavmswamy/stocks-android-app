@@ -2,6 +2,7 @@ package com.example.stocks;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +13,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -51,60 +61,41 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final int itemType = getItemViewType(position);
 
+        String timeText = "";
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        try {
+            Date postedDate = inputFormat.parse(news.get(position).getTimestamp());
+            Date now = new Date();
+            long dateDiff = now.getTime() - postedDate.getTime();
+
+            long minute = TimeUnit.MILLISECONDS.toMinutes(dateDiff);
+            long day  = TimeUnit.MILLISECONDS.toDays(dateDiff);
+            if (minute < 24*60) {
+                timeText = minute + " minutes ago";
+            }  else {
+                timeText = day+" days ago";
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         if(itemType == FIRST) {
             FirstNewsViewHolder firstHolder = (FirstNewsViewHolder) holder;
             firstHolder.website.setText(news.get(position).getStockName());
-            firstHolder.timestamp.setText(news.get(position).getTimestamp());
-            //firstHolder.image.setImageResource();
-            Picasso.with(parentContext).load(news.get(position).getImageUrl()).into(firstHolder.image);
+            firstHolder.timestamp.setText(timeText);
+            Picasso.with(parentContext).load(news.get(position).getImageUrl()).resize(1920, 1080)
+                    .onlyScaleDown().into(firstHolder.image);
             firstHolder.title.setText(news.get(position).getTitle());
             firstHolder.url = news.get(position).getUrl();
-            /*firstHolder.card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.e("lkjhgf", "onClick: clicked---");
-                }
-            });*/
-
-            /*firstHolder.card.setLongClickable(true);
-            firstHolder.card.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                    LayoutInflater inflater = LayoutInflater.from(v.getContext());
-                    final View customView = inflater.inflate(R.layout.news_dialog, null);
-                    builder.setView(customView);
-
-                    customView.findViewById(R.id.chrome).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Log.e("chromeeeeeee", "onClick: chrome clickedddddddddddd");
-                        }
-                    });
-
-                    // create and show the alert dialog
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-
-                    return true;
-                }
-            });*/
-
         }
         else if(itemType == NOTFIRST) {
             OtherNewsViewHolder otherHolder = (OtherNewsViewHolder) holder;
             otherHolder.website.setText(news.get(position).getStockName());
-            otherHolder.timestamp.setText(news.get(position).getTimestamp());
-            Picasso.with(parentContext).load(news.get(position).getImageUrl()).into(otherHolder.image);
+            otherHolder.timestamp.setText(timeText);
+            Picasso.with(parentContext).load(news.get(position).getImageUrl()).resize(1920, 1080)
+                    .onlyScaleDown().into(otherHolder.image);
             otherHolder.title.setText(news.get(position).getTitle());
             otherHolder.url = news.get(position).getUrl();
-
-            otherHolder.card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.e("lkjhgf", "onClick: clicked---");
-                }
-            });
         }
     }
 

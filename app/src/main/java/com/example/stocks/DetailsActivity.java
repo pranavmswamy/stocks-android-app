@@ -1,6 +1,10 @@
 package com.example.stocks;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -8,9 +12,12 @@ import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;
@@ -18,8 +25,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.NumberPicker;
+import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -33,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 public class DetailsActivity extends AppCompatActivity {
@@ -57,12 +67,32 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView high;
     private RequestQueue requestQueue;
     private TextView marketValue;
+    private TextView change;
+    private ImageView trending;
+    Button showMore;
 
+    boolean favorite;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+    boolean showMoreExpanded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+
+        Toolbar myToolbar = findViewById(R.id.toolbar2);
+        setSupportActionBar(myToolbar);
+
+        // add back arrow to toolbar
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
+
+        sharedPreferences =  getApplicationContext().getSharedPreferences("stock_app", 0);
+        editor = sharedPreferences.edit();
 
         requestQueue = Volley.newRequestQueue(DetailsActivity.this);
         newsRecyclerView = findViewById(R.id.newsRecyclerView);
@@ -82,6 +112,9 @@ public class DetailsActivity extends AppCompatActivity {
         high = findViewById(R.id.high);
         about = findViewById(R.id.about);
         marketValue = findViewById(R.id.marketValue);
+        change = findViewById(R.id.change);
+        showMore = findViewById(R.id.showMore);
+        //trending = findViewById(R.id.trendingImage);
 
 
         Bundle bundle = getIntent().getExtras();
@@ -89,19 +122,12 @@ public class DetailsActivity extends AppCompatActivity {
             stock = (String) bundle.get("stock");
             stockName.setText(stock.toUpperCase());
 
+            sendLatestPriceGetRequest();
             loadChart();
-            loadPortfolioSection();
-
-
-
-
-
 
             // Start get request for News
             sendNewsGetRequest();
             sendAboutGetRequest();
-            sendLatestPriceGetRequest();
-
 
         }
         else {
@@ -123,6 +149,24 @@ public class DetailsActivity extends AppCompatActivity {
                     low.setText(jsonObject.getString("low"));
                     price.setText(jsonObject.getString("last"));
                     high.setText(jsonObject.getString("high"));
+
+                    // load portfolio here cause I need last price.
+                    loadPortfolioSection();
+
+                    double _change = Double.parseDouble(jsonObject.getString("last")) - Double.parseDouble(jsonObject.getString("prevClose"));
+
+                    if (_change > 0) {
+                        change.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.green));
+                        //trending.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_twotone_trending_up_24));
+                        change.setText(String.format("+$%.2f", Math.abs(_change)));
+
+                    }
+                    else if (_change < 0) {
+                        change.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
+                        //trending.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_baseline_trending_down_24));
+                        change.setText(String.format("-$%.2f", Math.abs(_change)));
+                    }
+
 
                     if(jsonObject.getString("mid") == "null") {
                         mid.setText("0.0");
@@ -155,6 +199,33 @@ public class DetailsActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(response);
                     String aboutText = jsonObject.getString("description");
                     about.setText(aboutText);
+
+                    if (about.getMaxLines() > 2) {
+                        // show showMore Button
+                        showMore.setVisibility(View.VISIBLE);
+                        about.setMaxLines(2);
+                        about.setEllipsize(TextUtils.TruncateAt.END);
+                        showMore.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (showMoreExpanded == false) {
+                                    showMoreExpanded = true;
+                                    about.setMaxLines(Integer.MAX_VALUE);
+                                    showMore.setText("Show less");
+                                }
+                                else {
+                                    showMoreExpanded = false;
+                                    about.setMaxLines(2);
+                                    about.setEllipsize(TextUtils.TruncateAt.END);
+                                    showMore.setText("Show more...");
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        showMore.setVisibility(View.INVISIBLE);
+                    }
+
                     subtitle.setText(jsonObject.getString("name"));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -248,21 +319,23 @@ public class DetailsActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("stock_app", 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        int quantity = sharedPreferences.getInt(stock.toLowerCase() + "_qty", -1);
+        float quantity = sharedPreferences.getFloat(stock.toLowerCase() + "_qty", -1.0f);
         if (quantity > 0) {
-            sharesOwned.setText("You have " + quantity + "shares of " + stock.toUpperCase());
+            sharesOwned.setText("Shares owned: " + quantity);
+            marketValue.setText("Market Value: $" + String.format("%.2f", quantity * Double.parseDouble(currentPrice.getText().toString())));
         }
         else {
             sharesOwned.setText("You have 0 shares of " + stock.toUpperCase());
+            marketValue.setText("Start trading!");
         }
 
-        double amount = sharedPreferences.getFloat(stock.toLowerCase() + "_amount", -1.0f);
+        /*double amount = sharedPreferences.getFloat(stock.toLowerCase() + "_amount", -1.0f);
         if (amount > 0) {
             marketValue.setText(amount + "");
         }
         else {
             marketValue.setText("Start trading!");
-        }
+        }*/
 
         trade.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -301,8 +374,91 @@ public class DetailsActivity extends AppCompatActivity {
                     }
                 });
 
+                customView.findViewById(R.id.buy).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
+                        float qtyInPortfolio = sharedPreferences.getFloat(stock + "_qty", 0);
+                        float qtyEntered = Float.parseFloat(noOfShares.getText().toString());
+                        double amountRemaining = sharedPreferences.getFloat("amountRemaining", -1.0f);
 
+                        if (qtyEntered > 0 && Double.parseDouble(price.getText().toString())*qtyEntered <= amountRemaining) {
+                            // buy
+                            float updatedQuantity = qtyEntered + qtyInPortfolio;
+                            double cost = qtyEntered*Double.parseDouble(price.getText().toString());
+                            double updatedAmountRemaining = amountRemaining - cost;
+
+                            editor.putFloat(stock+"_qty", updatedQuantity);
+                            editor.putFloat("amountRemaining", (float) updatedAmountRemaining);
+
+                            // update portfolio set
+                            Set<String> portfolio = sharedPreferences.getStringSet("portfolio", null);
+                            if (portfolio != null) {
+                                if (!portfolio.contains(stock.toLowerCase())) {
+                                    portfolio.add(stock.toLowerCase());
+                                    editor.putStringSet("portfolio", portfolio);
+                                }
+                            }
+                            else {
+                                Set<String> newPortfolio = new HashSet<>();
+                                newPortfolio.add(stock.toLowerCase());
+                                editor.putStringSet("portfolio", newPortfolio);
+                            }
+
+                        }
+                        else if (qtyEntered <= 0) {
+                            Toast.makeText(v.getContext(), "Cannot buy less than 0 shares", Toast.LENGTH_SHORT).show();
+                        }
+                        else if (Double.parseDouble(price.getText().toString())*qtyEntered > amountRemaining) {
+                            Toast.makeText(v.getContext(), "Not enough money to buy", Toast.LENGTH_SHORT).show();
+                        }
+
+                        editor.commit();
+
+                    }
+                });
+
+                customView.findViewById(R.id.sell).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        float qtyInPortfolio = sharedPreferences.getFloat(stock + "_qty", -1);
+                        float qtyEntered = Float.parseFloat(noOfShares.getText().toString());
+                        double amountRemaining = sharedPreferences.getFloat("amountRemaining", -1.0f);
+                        double currentPrice = Double.parseDouble(price.getText().toString());
+
+                        if (qtyEntered > 0 && qtyEntered <= qtyInPortfolio) {
+                            // sell
+                            double earned = qtyEntered * currentPrice;
+                            double updatedAmountRemaining = amountRemaining + earned;
+                            float updatedQuantity = qtyInPortfolio - qtyEntered;
+
+                            editor.putFloat("amountRemaining", (float) updatedAmountRemaining);
+                            editor.putFloat(stock+"_qty", updatedQuantity);
+
+                            if (updatedQuantity == 0) {
+                                // remove stock from portfolio set.
+                                Set<String> portfolio = sharedPreferences.getStringSet("portfolio", null);
+                                if (portfolio != null) {
+                                    portfolio.remove(stock.toLowerCase());
+                                    editor.putStringSet("portfolio", portfolio);
+                                }
+                                else {
+                                    Log.e("selling w/o buying", "onClick: Should be unreachable code with usual execution");
+                                }
+                            }
+
+                        }
+                        else if (qtyEntered <= 0) {
+                            Toast.makeText(v.getContext(), "Cannot sell less than 0 shares", Toast.LENGTH_SHORT).show();
+                        }
+                        else if (qtyEntered > qtyInPortfolio) {
+                            Toast.makeText(v.getContext(), "Not enough shares to sell", Toast.LENGTH_SHORT).show();
+                        }
+
+                        editor.commit();
+
+                    }
+                });
 
                 // create and show the alert dialog
                 AlertDialog dialog = builder.create();
@@ -310,5 +466,54 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        Set<String> favorites = sharedPreferences.getStringSet("favorites", null);
+        if (favorites != null && favorites.contains(stock.toLowerCase())) {
+            getMenuInflater().inflate(R.menu.details_menu_favorited, menu);
+            favorite = true;
+        }
+        else {
+            getMenuInflater().inflate(R.menu.details_menu_unfavorited, menu);
+            favorite = false;
+        }
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.fav_icon:
+                Set<String> favorites = sharedPreferences.getStringSet("favorites", null);
+                if (favorite == false) {
+                    item.setIcon(R.drawable.ic_baseline_star_24);
+                    // add to favs
+                    if (favorites == null) {
+                        favorites = new HashSet<>();
+                    }
+                    favorites.add(stock.toLowerCase());
+                }
+                else {
+                    item.setIcon(R.drawable.ic_baseline_star_border_24);
+                    // remove from favs
+                    favorites.remove(stock.toLowerCase());
+                }
+                editor.putStringSet("favorites", favorites);
+                Log.d("favorites:", "onOptionsItemSelected: " + favorites);
+                editor.commit();
+                favorite = !favorite;
+                Toast.makeText(getApplicationContext(), "sdsfg", Toast.LENGTH_LONG).show();
+                return true;
+
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            default: return super.onOptionsItemSelected(item);
+        }
     }
 }

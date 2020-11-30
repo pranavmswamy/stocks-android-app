@@ -6,14 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".DetailsActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:clickable="true" />
+
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
+        android:layout_marginTop="?attr/actionBarSize"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,6 +46,8 @@
                     android:id="@+id/stockName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
                     android:text="stock_name"
                     android:textColor="@color/black"
                     android:textSize="24sp"
@@ -45,7 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:text="subtitle"
                     android:textSize="14sp"
                     android:textStyle="bold"
@@ -56,7 +71,8 @@
                     android:id="@+id/stockPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="23dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="16dp"
                     android:text="price"
                     android:textColor="@color/black"
                     android:textSize="24sp"
@@ -68,29 +84,20 @@
                     android:id="@+id/change"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="16dp"
                     android:text="change"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/stockPrice" />
 
-                <ImageView
-                    android:id="@+id/trendingImage"
-                    android:layout_width="30dp"
-                    android:layout_height="23dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="12dp"
-                    app:layout_constraintEnd_toStartOf="@+id/change"
-                    app:layout_constraintTop_toBottomOf="@+id/stockPrice"
-                    app:srcCompat="@drawable/no_image" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <WebView
                 android:id="@+id/webView"
                 android:layout_width="match_parent"
-                android:layout_height="400dp">
+                android:layout_height="350dp">
 
             </WebView>
 
@@ -111,7 +118,7 @@
                     android:layout_marginTop="8dp"
                     android:text="Portfolio"
                     android:textColor="@color/black"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -120,34 +127,38 @@
                     android:id="@+id/sharesOwned"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="52dp"
                     android:layout_marginTop="4dp"
                     android:text="subtitle"
+                    android:textColor="@color/black"
                     android:textSize="14sp"
                     android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/trade"
+                    app:layout_constraintHorizontal_bias="0.457"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/portfolioHeading" />
 
                 <Button
                     android:id="@+id/trade"
-                    android:layout_width="wrap_content"
+                    android:layout_width="125dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="49dp"
-                    android:layout_marginEnd="44dp"
-                    android:layout_marginBottom="11dp"
-                    android:text="Button"
+                    android:layout_marginEnd="24dp"
+                    android:background="@drawable/round_shape"
+                    android:text="Trade"
+                    android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintVertical_bias="1.0" />
 
                 <TextView
                     android:id="@+id/marketValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="51dp"
-                    android:layout_marginTop="9dp"
+                    android:layout_marginTop="2dp"
                     android:text="TextView"
+                    android:textColor="@color/black"
+                    app:layout_constraintEnd_toStartOf="@+id/trade"
+                    app:layout_constraintHorizontal_bias="0.458"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/sharesOwned" />
 
@@ -167,7 +178,7 @@
                     android:layout_marginTop="16dp"
                     android:text="Stats"
                     android:textColor="@color/black"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -176,55 +187,66 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@+id/stats"
-                    tools:layout_editor_absoluteX="174dp">
+                    tools:layout_editor_absoluteX="174dp"
+                    android:stretchColumns="1,3,5">
 
                     <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="4dp">
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:layout_width="0dp">
 
                         <TextView
                             android:id="@+id/textView11"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="Current Price:" />
+                            android:layout_marginStart="16dp"
+                            android:text="Current Price: "
+                            android:textColor="@color/black" />
 
                         <TextView
                             android:id="@+id/currentPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="16dp"
-                            android:text="-" />
+                            android:layout_marginRight="8dp"
+                            android:layout_weight="1"
+                            android:text="-"
+                            android:textColor="@color/black" />
 
                         <TextView
                             android:id="@+id/textView17"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Low:" />
+                            android:text="Low: "
+                            android:textColor="@color/black" />
 
                         <TextView
                             android:id="@+id/low"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="16dp"
-                            android:text="-" />
+                            android:layout_marginRight="8dp"
+                            android:layout_weight="1"
+                            android:text="-"
+                            android:textColor="@color/black" />
 
                         <TextView
                             android:id="@+id/textView19"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Bid Price:" />
+                            android:text="Bid Price: "
+                            android:textColor="@color/black" />
 
                         <TextView
                             android:id="@+id/bidPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="-" />
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:text="-"
+                            android:textColor="@color/black" />
                     </TableRow>
 
                     <TableRow
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:padding="4dp">
 
@@ -232,42 +254,54 @@
                             android:id="@+id/textView13"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="Open Price:" />
+                            android:layout_marginStart="16dp"
+                            android:text="Open Price: "
+                            android:textColor="@color/black" />
 
                         <TextView
                             android:id="@+id/openPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="-" />
+                            android:layout_marginRight="8dp"
+                            android:layout_weight="1"
+                            android:text="-"
+                            android:textColor="@color/black" />
 
                         <TextView
                             android:id="@+id/textView21"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Mid:" />
+                            android:text="Mid: "
+                            android:textColor="@color/black" />
 
                         <TextView
                             android:id="@+id/mid"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="-" />
+                            android:layout_marginRight="8dp"
+                            android:layout_weight="1"
+                            android:text="-"
+                            android:textColor="@color/black" />
 
                         <TextView
                             android:id="@+id/textView23"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="High:" />
+                            android:text="High: "
+                            android:textColor="@color/black" />
 
                         <TextView
                             android:id="@+id/high"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="-" />
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:text="-"
+                            android:textColor="@color/black" />
                     </TableRow>
 
                     <TableRow
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:padding="4dp">
 
@@ -275,14 +309,17 @@
                             android:id="@+id/textView15"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="Volume:" />
+                            android:layout_marginStart="16dp"
+                            android:text="Volume: "
+                            android:textColor="@color/black" />
 
                         <TextView
                             android:id="@+id/volume"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="-" />
+                            android:layout_marginRight="16dp"
+                            android:text="-"
+                            android:textColor="@color/black" />
                     </TableRow>
 
                 </TableLayout>
@@ -302,21 +339,43 @@
                     android:layout_marginTop="16dp"
                     android:text="About"
                     android:textColor="@color/black"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/about"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="12dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
                     android:paddingBottom="4dp"
                     android:text="TextView"
+                    android:textColor="@color/black"
+                    app:layout_constraintBottom_toTopOf="@+id/showMore"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.019"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView25" />
+
+                <Button
+                    android:id="@+id/showMore"
+                    android:layout_width="86dp"
+                    android:layout_height="25dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@android:color/transparent"
+                    android:text="Show more..."
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/tertiary_text_light"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -332,7 +391,7 @@
                     android:layout_marginTop="16dp"
                     android:text="News"
                     android:textColor="@color/black"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -342,6 +401,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="16dp"
+
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView27" />

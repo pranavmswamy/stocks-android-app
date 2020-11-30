@@ -9,9 +9,10 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/newsFirstRowCard"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:background="@drawable/round_shape"
+        app:cardCornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,13 +20,14 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/round_shape">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/newsFirstRowImage"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="170dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -35,9 +37,12 @@
                 android:id="@+id/newsFirstRowUrl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="19dp"
                 android:text="TextView"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/newsFirstRowTime"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/newsFirstRowImage" />
 
@@ -45,7 +50,7 @@
                 android:id="@+id/newsFirstRowTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="8dp"
                 android:text="TextView"
                 app:layout_constraintStart_toEndOf="@+id/newsFirstRowUrl"
@@ -53,12 +58,17 @@
 
             <TextView
                 android:id="@+id/newsFirstRowTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:text="TextView"
+                android:textColor="@color/black"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/newsFirstRowUrl"
                 app:layout_constraintVertical_bias="1.0" />

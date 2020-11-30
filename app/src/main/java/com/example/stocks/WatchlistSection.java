@@ -1,17 +1,17 @@
 package com.example.stocks;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters;
@@ -19,54 +19,44 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters;
 public class WatchlistSection extends Section {
 
     private final PortfolioSection portfolio;
-    private ArrayList<String> watchlist = new ArrayList<String>(Arrays.asList("wl1", "wl2", "wl3"));
+    private ArrayList<StockListingDataModel> watchlist;
     private RecyclerView parentRecyclerView;
+    Context parentContext;
     /**
      * Create a Section object based on {@link SectionParameters}.
      */
-    public WatchlistSection(Context parentContext, RecyclerView recyclerView, PortfolioSection portfolioSection) {
+    public WatchlistSection(Context parentContext, RecyclerView recyclerView, PortfolioSection portfolioSection, ArrayList<String> favoritesList) {
         super(SectionParameters.builder().itemResourceId(R.layout.stock_listing).headerResourceId(R.layout.watchlist_header).build());
         this.parentRecyclerView = recyclerView;
         this.portfolio = portfolioSection;
+        this.parentContext = parentContext;
 
-        /*SwipeAndMoveCallback swipeAndMoveCallback = new SwipeAndMoveCallback(parentContext) {
+        /*if (favoritesList != null) {
+            watchlist = new ArrayList<>();
+            for (String stock : favoritesList) {
+                watchlist.add(new StockListingDataModel(parentContext, stock));
+            }
+        }*/
+        update();
+    }
 
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-
-                int fromPosition = viewHolder.getAdapterPosition();
-                int toPosition = target.getAdapterPosition();
-
-                Log.e("tag", "Watchlist Section fromPosition = " + fromPosition);
-                Log.e("tag", "Watchlist Section toPosition = " + toPosition);
-
-                if(fromPosition > portfolio.getContentItemsTotal() + 1 &&
-                        toPosition < watchlist.size() + portfolio.getContentItemsTotal() + 2 &&
-                        toPosition > portfolio.getContentItemsTotal() + 1 &&
-                        fromPosition < watchlist.size() + portfolio.getContentItemsTotal() + 2) {
-                    Log.e("tag", "Entered if condition in watchlist section" );
-                    Collections.swap(watchlist, fromPosition - portfolio.getContentItemsTotal() - 2, toPosition - portfolio.getContentItemsTotal() - 2);
-                    parentRecyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
-                    return true;
-                }
-                return false;
+    void update() {
+        SharedPreferences sharedPreferences = parentContext.getSharedPreferences("stock_app", 0);
+        //SharedPreferences.Editor editor = sharedPreferences.edit();
+        Log.d("asdsf", "update: update in fav called");
+        Set<String> favoritesInPref = sharedPreferences.getStringSet("favorites", null);
+        if (favoritesInPref != null) {
+            if(watchlist == null) {
+                watchlist = new ArrayList<>();
+            }
+            else {
+                watchlist.clear();
             }
 
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                final int position = viewHolder.getAdapterPosition();
-                switch (direction) {
-                    case ItemTouchHelper.LEFT:
-                        Log.e("tag", "onSwiped: "+"item being removed" );
-                        watchlist.remove(watchlist.size() - portfolio.getContentItemsTotal() - 2);
-                        parentRecyclerView.getAdapter().notifyItemRemoved(position);
-                        break;
-                }
+            for (String stock : favoritesInPref) {
+                watchlist.add(new StockListingDataModel(parentContext, stock, parentRecyclerView));
             }
-        };
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeAndMoveCallback);
-        itemTouchHelper.attachToRecyclerView(parentRecyclerView);*/
+        }
     }
 
     @Override
@@ -82,10 +72,30 @@ public class WatchlistSection extends Section {
     @Override
     public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
         StockListingViewHolder stockListingHolder = (StockListingViewHolder) holder;
-        stockListingHolder.getStockName().setText(watchlist.get(position));
-        stockListingHolder.getStockPrice().setText(watchlist.get(position));
-        stockListingHolder.getChange().setText(watchlist.get(position));
-        stockListingHolder.getSubtitle().setText(watchlist.get(position) + "at position " + holder.getAdapterPosition());
+        stockListingHolder.getStockName().setText(watchlist.get(position).companyName);
+        stockListingHolder.getStockPrice().setText(watchlist.get(position).currentPrice);
+        stockListingHolder.trending.setImageDrawable(ContextCompat.getDrawable(parentContext, R.drawable.ic_app_background));
+
+        double change = watchlist.get(position).change;
+        if (change > 0) {
+            stockListingHolder.getChange().setTextColor(ContextCompat.getColor(parentContext,R.color.green));
+            stockListingHolder.trending.setImageDrawable(ContextCompat.getDrawable(parentContext, R.drawable.ic_twotone_trending_up_24));
+        }
+        else if (change < 0) {
+            stockListingHolder.getChange().setTextColor(ContextCompat.getColor(parentContext, R.color.red));
+            stockListingHolder.trending.setImageDrawable(ContextCompat.getDrawable(parentContext, R.drawable.ic_baseline_trending_down_24));
+        }
+        stockListingHolder.getChange().setText(String.format("%.2f", change));
+        stockListingHolder.getSubtitle().setText(watchlist.get(position).noOfShares);
+        stockListingHolder.details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goToDetails = new Intent(v.getContext(), DetailsActivity.class);
+                goToDetails.putExtra("stock", watchlist.get(position).ticker);
+                v.getContext().startActivity(goToDetails);
+            }
+        });
+
     }
 
     @Override
@@ -100,7 +110,8 @@ public class WatchlistSection extends Section {
 
     }
 
-    public ArrayList<String> getWatchlist() {
+    public ArrayList<StockListingDataModel> getWatchlist() {
         return watchlist;
     }
+
 }
