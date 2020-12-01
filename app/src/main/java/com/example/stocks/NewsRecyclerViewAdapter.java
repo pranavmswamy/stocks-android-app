@@ -94,6 +94,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             otherHolder.timestamp.setText(timeText);
             Picasso.with(parentContext).load(news.get(position).getImageUrl()).resize(1920, 1080)
                     .onlyScaleDown().into(otherHolder.image);
+
             otherHolder.title.setText(news.get(position).getTitle());
             otherHolder.url = news.get(position).getUrl();
         }

@@ -30,6 +30,7 @@ public class WatchlistSection extends Section {
         this.parentRecyclerView = recyclerView;
         this.portfolio = portfolioSection;
         this.parentContext = parentContext;
+        watchlist = new ArrayList<>();
 
         /*if (favoritesList != null) {
             watchlist = new ArrayList<>();
@@ -45,6 +46,7 @@ public class WatchlistSection extends Section {
         //SharedPreferences.Editor editor = sharedPreferences.edit();
         Log.d("asdsf", "update: update in fav called");
         Set<String> favoritesInPref = sharedPreferences.getStringSet("favorites", null);
+        Log.e("fav in watchlist.update()", "update: " + favoritesInPref );
         if (favoritesInPref != null) {
             if(watchlist == null) {
                 watchlist = new ArrayList<>();
@@ -72,10 +74,9 @@ public class WatchlistSection extends Section {
     @Override
     public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
         StockListingViewHolder stockListingHolder = (StockListingViewHolder) holder;
-        stockListingHolder.getStockName().setText(watchlist.get(position).companyName);
-        stockListingHolder.getStockPrice().setText(watchlist.get(position).currentPrice);
-        stockListingHolder.trending.setImageDrawable(ContextCompat.getDrawable(parentContext, R.drawable.ic_app_background));
 
+        stockListingHolder.getStockName().setText(watchlist.get(position).ticker.toUpperCase());
+        stockListingHolder.getStockPrice().setText(watchlist.get(position).currentPrice);
         double change = watchlist.get(position).change;
         if (change > 0) {
             stockListingHolder.getChange().setTextColor(ContextCompat.getColor(parentContext,R.color.green));
@@ -85,8 +86,10 @@ public class WatchlistSection extends Section {
             stockListingHolder.getChange().setTextColor(ContextCompat.getColor(parentContext, R.color.red));
             stockListingHolder.trending.setImageDrawable(ContextCompat.getDrawable(parentContext, R.drawable.ic_baseline_trending_down_24));
         }
+
         stockListingHolder.getChange().setText(String.format("%.2f", change));
         stockListingHolder.getSubtitle().setText(watchlist.get(position).noOfShares);
+
         stockListingHolder.details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,7 +98,6 @@ public class WatchlistSection extends Section {
                 v.getContext().startActivity(goToDetails);
             }
         });
-
     }
 
     @Override

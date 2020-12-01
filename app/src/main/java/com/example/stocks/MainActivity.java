@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -40,11 +43,12 @@ public class MainActivity extends AppCompatActivity {
     PortfolioSection portfolio;
     WatchlistSection watchlist;
     private AutoSuggestAdapter autoSuggestAdapter;
+    private ProgressBar progressBarMain;
+    TextView fetchingDataMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_Stocks);
-
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         super.onCreate(savedInstanceState);
@@ -54,9 +58,15 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         recyclerView = findViewById(R.id.recycler_view);
+        progressBarMain = findViewById(R.id.progressBarMain);
+        fetchingDataMain = findViewById(R.id.fetchingDataMain);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         SectionedRecyclerViewAdapter sectionAdapter = new SectionedRecyclerViewAdapter();
 
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        //recyclerView.setVisibility(View.GONE);
 
         /*Set<String> portfolioSet = getPortfolio();
         Set<String> favoritesSet = getFavorites();
@@ -85,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
         sectionAdapter.addSection(watchlist);
         sectionAdapter.addSection(footer);
 
+        //Log.e("total length", "onCreate: " + sectionAdapter.getItemCount());
+
         recyclerView.setAdapter(sectionAdapter);
 
         SwipeAndMoveCallback swipeAndMoveCallback = new SwipeAndMoveCallback(this, portfolio.getPortfolio(), watchlist.getWatchlist(), recyclerView);
@@ -92,6 +104,11 @@ public class MainActivity extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
         recyclerView.getAdapter().notifyDataSetChanged();
+
+        //recyclerView.setVisibility(View.VISIBLE);
+        progressBarMain.setVisibility(View.GONE);
+        fetchingDataMain.setVisibility(View.GONE);
+
     }
 
     @SuppressLint("RestrictedApi")
@@ -107,6 +124,8 @@ public class MainActivity extends AppCompatActivity {
 
         autoSuggestAdapter = new AutoSuggestAdapter(this, android.R.layout.simple_dropdown_item_1line);
         searchAutoComplete.setAdapter(autoSuggestAdapter);
+
+        Log.e("main", "onCreateOptionsMenu: in autocomplete" );
 
         searchAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -158,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+        Log.e("asdf", "onStart: CALLED" );
         watchlist.update();
         portfolio.update();
         super.onStart();
@@ -166,9 +186,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("main", "onResume: main");
+        Log.e("main", "onResume: main CALLED");
 
-        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.getAdapter().notifyItemChanged(1);
     }
 
     private void makeAutoCompleteApiCall(String text) {
@@ -199,5 +219,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 }

@@ -115,6 +115,9 @@ public class SwipeAndMoveCallback extends ItemTouchHelper.Callback {
             parentRecyclerView.getAdapter().notifyDataSetChanged();
             //Log.d("tag", "onSwiped: " + parentRecyclerView.getAdapter());
         }
+        else {
+            parentRecyclerView.getAdapter().notifyDataSetChanged();
+        }
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.example.stocks;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -91,12 +92,13 @@ class StockListingDataModel {
         SharedPreferences sharedPreferences = parentContext.getSharedPreferences("stock_app", 0);
         float noOfSharesBought = sharedPreferences.getFloat(stock+ "_qty", -1.0f);
         if (noOfSharesBought > 0) {
-            noOfShares = noOfSharesBought + " shares";
+            noOfShares = String.format("%.2f", noOfSharesBought) + " shares";
         }
         else {
             noOfShares = companyName;
         }
         parentRecyclerView.getAdapter().notifyDataSetChanged();
+
     }
 
 }

@@ -34,16 +34,20 @@ public class PortfolioSection extends Section {
 
 
     private ArrayList<StockListingDataModel> portfolio;
+    private ArrayList<StockListingDataModel> watchlist;
+
     private RecyclerView parentRecyclerView;
     private Context parentContext;
+
     /**
      * Create a Section object based on {@link SectionParameters}.
      */
+
     public PortfolioSection(Context parentContext, RecyclerView recyclerView, ArrayList<String> portfolioList) {
         super(SectionParameters.builder().itemResourceId(R.layout.stock_listing).headerResourceId(R.layout.portfolio_header).build());
         this.parentRecyclerView = recyclerView;
         this.parentContext = parentContext;
-
+        portfolio = new ArrayList<>();
         /*if (portfolioList != null) {
             portfolio = new ArrayList<>();
             for (String stock : portfolioList) {
@@ -132,18 +136,26 @@ public class PortfolioSection extends Section {
     @Override
     public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
         StockListingViewHolder stockListingHolder = (StockListingViewHolder) holder;
-        stockListingHolder.getStockName().setText(portfolio.get(position).companyName);
+
+        stockListingHolder.getStockName().setText(portfolio.get(position).ticker.toUpperCase());
         stockListingHolder.getStockPrice().setText(portfolio.get(position).currentPrice);
-        stockListingHolder.trending.setImageDrawable(ContextCompat.getDrawable(parentContext, R.drawable.ic_app_background));
         double change = portfolio.get(position).change;
         if (change > 0) {
+            stockListingHolder.trending.setVisibility(View.VISIBLE);
             stockListingHolder.getChange().setTextColor(ContextCompat.getColor(parentContext,R.color.green));
             stockListingHolder.trending.setImageDrawable(ContextCompat.getDrawable(parentContext, R.drawable.ic_twotone_trending_up_24));
         }
         else if (change < 0) {
+            stockListingHolder.trending.setVisibility(View.VISIBLE);
             stockListingHolder.getChange().setTextColor(ContextCompat.getColor(parentContext, R.color.red));
             stockListingHolder.trending.setImageDrawable(ContextCompat.getDrawable(parentContext, R.drawable.ic_baseline_trending_down_24));
         }
+        else {
+            stockListingHolder.trending.setVisibility(View.GONE);
+            stockListingHolder.getChange().setTextColor(ContextCompat.getColor(parentContext, R.color.button_grey));
+        }
+
+
         stockListingHolder.getChange().setText(String.format("%.2f", change));
         stockListingHolder.getSubtitle().setText(portfolio.get(position).noOfShares);
         stockListingHolder.details.setOnClickListener(new View.OnClickListener() {
@@ -187,6 +199,7 @@ public class PortfolioSection extends Section {
         SharedPreferences sharedPreferences = parentContext.getSharedPreferences("stock_app", 0);
         Log.d("asdsf", "update: update in port called");
         Set<String> portfolioinPref = sharedPreferences.getStringSet("portfolio", null);
+        Log.e("portfolio in portfolio.update()", "update: " + portfolioinPref );
         if (portfolioinPref != null) {
             if (portfolio != null) {
                 portfolio.clear();

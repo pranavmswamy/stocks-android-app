@@ -14,4 +14,5 @@
     <color name="colorAccent"> #FF000000 </color>
     <color name="green">#0D9D0D </color>
     <color name="red">#C10B0B </color>
+    <color name="button_grey">#E0E0E0</color>
 </resources>
