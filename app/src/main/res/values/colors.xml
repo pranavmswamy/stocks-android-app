@@ -9,7 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="trendingColor">#FF000000</color>
     <color name="splash"> #FF000000 </color>
-    <color name="trendingSearch"> #FF000000 </color>
+    <color name="trendingSearch"> #888888 </color>
     <color name="sectionTabColor"> #FF000000 </color>
     <color name="colorAccent"> #FF000000 </color>
     <color name="green">#0D9D0D </color>

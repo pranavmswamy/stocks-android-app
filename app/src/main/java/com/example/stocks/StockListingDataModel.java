@@ -60,6 +60,7 @@ class StockListingDataModel {
     }
 
     void updateValues(boolean showSpinner) {
+        Log.e("fd", "updateValues: entered updateValues() for " + ticker);
         if (showSpinner == false) {
             parentRecyclerView.setVisibility(View.VISIBLE);
             progressBarMain.setVisibility(View.GONE);
@@ -99,6 +100,9 @@ class StockListingDataModel {
         if (companyName == null) {
             requestCounter.addAndGet(1);
             requestQueue.add(stringRequest);
+        }
+        else {
+            sendLatestPriceGetRequest(ticker);
         }
     }
 

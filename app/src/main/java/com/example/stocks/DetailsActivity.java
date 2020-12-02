@@ -165,7 +165,7 @@ public class DetailsActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    currentPrice.setText(jsonObject.getString("last"));
+                    currentPrice.setText(String.format("%.2f", Double.parseDouble(jsonObject.getString("last"))));
                     openPrice.setText(jsonObject.getString("open"));
                     volume.setText(jsonObject.getString("volume"));
                     low.setText(jsonObject.getString("low"));

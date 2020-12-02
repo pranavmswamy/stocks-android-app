@@ -85,15 +85,22 @@ public class WatchlistSection extends Section {
 
         stockListingHolder.getStockName().setText(watchlist.get(position).ticker.toUpperCase());
         stockListingHolder.getStockPrice().setText(watchlist.get(position).currentPrice);
-        double change = watchlist.get(position).change;
+        double change = Double.parseDouble(String.format("%.2f", watchlist.get(position).change));
         if (change > 0) {
+            stockListingHolder.trending.setVisibility(View.VISIBLE);
             stockListingHolder.getChange().setTextColor(ContextCompat.getColor(parentContext,R.color.green));
             stockListingHolder.trending.setImageDrawable(ContextCompat.getDrawable(parentContext, R.drawable.ic_twotone_trending_up_24));
         }
         else if (change < 0) {
+            stockListingHolder.trending.setVisibility(View.VISIBLE);
             stockListingHolder.getChange().setTextColor(ContextCompat.getColor(parentContext, R.color.red));
             stockListingHolder.trending.setImageDrawable(ContextCompat.getDrawable(parentContext, R.drawable.ic_baseline_trending_down_24));
         }
+        else {
+            stockListingHolder.trending.setVisibility(View.GONE);
+            stockListingHolder.getChange().setTextColor(ContextCompat.getColor(parentContext, R.color.trendingSearch));
+        }
+
 
         stockListingHolder.getChange().setText(String.format("%.2f", change));
         stockListingHolder.getSubtitle().setText(watchlist.get(position).noOfShares);

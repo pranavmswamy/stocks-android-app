@@ -32,7 +32,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
@@ -99,22 +101,31 @@ public class MainActivity extends AppCompatActivity {
         //recyclerView.setVisibility(View.VISIBLE);
         //progressBarMain.setVisibility(View.GONE);
         //fetchingDataMain.setVisibility(View.GONE);
-        //handler = new Handler();
+        handler = new Handler();
     }
 
-    private Runnable runnableService = new Runnable() {
+    Runnable runnableService = new Runnable() {
+
+        private boolean KILL = false;
+
         @Override
         public void run() {
             // create task here
 
-            for (StockListingDataModel model: portfolio.getPortfolio()) {
-                model.updateValues(false);
-            }
-            for (StockListingDataModel model: watchlist.getWatchlist()) {
-                model.updateValues(false);
+            if (!KILL) {
+                for (StockListingDataModel model: portfolio.getPortfolio()) {
+                    model.updateValues(false);
+                }
+                for (StockListingDataModel model: watchlist.getWatchlist()) {
+                    model.updateValues(false);
+                }
+                handler.postDelayed(runnableService, DEFAULT_INTERVAL);
             }
 
-            handler.postDelayed(runnableService, DEFAULT_INTERVAL);
+        }
+
+        public void killRunnable() {
+            KILL = true;
         }
     };
 
@@ -169,18 +180,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    /*Set<String> getPortfolio() {
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("stock_app", 0);
-        Set<String> portfolio = sharedPreferences.getStringSet("portfolio", null);
-        return portfolio;
-    }
-
-    Set<String> getFavorites() {
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("stock_app", 0);
-        Set<String> favorites = sharedPreferences.getStringSet("favorites", null);
-        return favorites;
-    }*/
-
     @Override
     protected void onStart() {
         Log.e("asdf", "onStart: CALLED" );
@@ -204,14 +203,24 @@ public class MainActivity extends AppCompatActivity {
         else{
             showSpinner = false;
         }
-        for (StockListingDataModel model: portfolio.getPortfolio()) {
-            model.updateValues(showSpinner);
+
+        Set<String> portfolioInPref = sharedPreferences.getStringSet("portfolio", new HashSet<>());
+        Set<String> watchlistInPref = sharedPreferences.getStringSet("favorites", new HashSet<>());
+
+        if (watchlistInPref != null && portfolioInPref != null && watchlistInPref.size() != watchlist.getWatchlist().size() || portfolioInPref.size() != portfolio.getPortfolio().size()) {
+            watchlist.update();
+            portfolio.update();
         }
-        for (StockListingDataModel model: watchlist.getWatchlist()) {
-            model.updateValues(showSpinner);
+        else {
+            for (StockListingDataModel model: portfolio.getPortfolio()) {
+                model.updateValues(showSpinner);
+            }
+            for (StockListingDataModel model: watchlist.getWatchlist()) {
+                model.updateValues(showSpinner);
+            }
         }
 
-        //handler.postDelayed(runnableService, DEFAULT_INTERVAL);
+        handler.postDelayed(runnableService, DEFAULT_INTERVAL);
         recyclerView.getAdapter().notifyDataSetChanged();
     }
 
@@ -219,7 +228,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Log.e("ada", "onStop: called" );
-        //handler.removeCallbacksAndMessages(runnableService);
+        handler.removeCallbacksAndMessages(runnableService);
+        handler = null;
     }
 
     private void makeAutoCompleteApiCall(String text) {

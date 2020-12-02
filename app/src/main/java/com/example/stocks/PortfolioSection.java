@@ -145,7 +145,7 @@ public class PortfolioSection extends Section {
 
         stockListingHolder.getStockName().setText(portfolio.get(position).ticker.toUpperCase());
         stockListingHolder.getStockPrice().setText(portfolio.get(position).currentPrice);
-        double change = portfolio.get(position).change;
+        double change = Double.parseDouble(String.format("%.2f", portfolio.get(position).change));
         if (change > 0) {
             stockListingHolder.trending.setVisibility(View.VISIBLE);
             stockListingHolder.getChange().setTextColor(ContextCompat.getColor(parentContext,R.color.green));
@@ -158,8 +158,9 @@ public class PortfolioSection extends Section {
         }
         else {
             stockListingHolder.trending.setVisibility(View.GONE);
-            stockListingHolder.getChange().setTextColor(ContextCompat.getColor(parentContext, R.color.button_grey));
+            stockListingHolder.getChange().setTextColor(ContextCompat.getColor(parentContext, R.color.trendingSearch));
         }
+
 
 
         stockListingHolder.getChange().setText(String.format("%.2f", change));
