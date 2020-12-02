@@ -195,6 +195,16 @@ public class DetailsActivity extends AppCompatActivity {
                         bidPrice.setText(jsonObject.getString("bidPrice"));
                     }
 
+                    //converting to two decimal places
+                    openPrice.setText(String.format("%.2f", Double.parseDouble(openPrice.getText().toString())));
+                    currentPrice.setText(String.format("%.2f", Double.parseDouble(currentPrice.getText().toString())));
+                    low.setText(String.format("%.2f", Double.parseDouble(low.getText().toString())));
+                    bidPrice.setText(String.format("%.2f", Double.parseDouble(bidPrice.getText().toString())));
+                    mid.setText(String.format("%.2f", Double.parseDouble(mid.getText().toString())));
+                    high.setText(String.format("%.2f", Double.parseDouble(high.getText().toString())));
+
+
+
                     // load portfolio here cause I need last price.
                     loadPortfolioSection();
 
@@ -594,8 +604,6 @@ public class DetailsActivity extends AppCompatActivity {
                 Log.d("favorites:", "onOptionsItemSelected: " + favorites);
                 editor.commit();
                 favorite = !favorite;
-                Toast.makeText(getApplicationContext(), "sdsfg", Toast.LENGTH_LONG).show();
-
                 return true;
 
             case android.R.id.home:

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,14 +24,20 @@ public class WatchlistSection extends Section {
     private ArrayList<StockListingDataModel> watchlist;
     private RecyclerView parentRecyclerView;
     Context parentContext;
+    ProgressBar progressBarMain;
+    TextView fetchingDataMain;
     /**
      * Create a Section object based on {@link SectionParameters}.
      */
-    public WatchlistSection(Context parentContext, RecyclerView recyclerView, PortfolioSection portfolioSection, ArrayList<String> favoritesList) {
+    public WatchlistSection(Context parentContext, RecyclerView recyclerView, PortfolioSection portfolioSection, ProgressBar progressBarMain, TextView fetchingDataMain) {
         super(SectionParameters.builder().itemResourceId(R.layout.stock_listing).headerResourceId(R.layout.watchlist_header).build());
         this.parentRecyclerView = recyclerView;
         this.portfolio = portfolioSection;
         this.parentContext = parentContext;
+
+        this.progressBarMain = progressBarMain;
+        this.fetchingDataMain = fetchingDataMain;
+
         watchlist = new ArrayList<>();
 
         /*if (favoritesList != null) {
@@ -56,7 +64,7 @@ public class WatchlistSection extends Section {
             }
 
             for (String stock : favoritesInPref) {
-                watchlist.add(new StockListingDataModel(parentContext, stock, parentRecyclerView));
+                watchlist.add(new StockListingDataModel(parentContext, stock, parentRecyclerView, progressBarMain, fetchingDataMain));
             }
         }
     }

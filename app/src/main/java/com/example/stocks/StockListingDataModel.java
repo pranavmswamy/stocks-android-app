@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,26 +19,62 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
+
 class StockListingDataModel {
     String companyName;
     String currentPrice;
     double change;
     String noOfShares;
-    RequestQueue requestQueue;
+    static RequestQueue requestQueue = null;
+    static AtomicInteger requestCounter = new AtomicInteger(0);
     Context parentContext;
     String ticker;
+    ProgressBar progressBarMain;
+    TextView fetchingDataMain;
     RecyclerView parentRecyclerView;
+    boolean modelLoaded = false;
 
-    public StockListingDataModel(Context parentContext, String ticker, RecyclerView parentRecyclerView) {
-        requestQueue = Volley.newRequestQueue(parentContext);
+    public StockListingDataModel(Context parentContext, String ticker, RecyclerView parentRecyclerView, ProgressBar progressBarMain, TextView fetchingDataMain) {
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(parentContext);
+        }
         this.parentContext = parentContext;
+        this.progressBarMain = progressBarMain;
+        this.fetchingDataMain = fetchingDataMain;
         this.ticker = ticker;
+        Log.e("constructor", "StockListingDataModel: entered constructor for " + ticker);
         this.parentRecyclerView = parentRecyclerView;
-        sendAboutGetRequest(ticker);
+        companyName = null;
+        update(this.ticker);
+    }
 
+    void update(String ticker) {
+        Log.e("update()", "update: entered update for " + ticker);
+        modelLoaded = false;
+        parentRecyclerView.setVisibility(View.GONE); // set it back to gone.
+        progressBarMain.setVisibility(View.VISIBLE);
+        fetchingDataMain.setVisibility(View.VISIBLE);
+        sendAboutGetRequest(ticker);
+    }
+
+    void updateValues(boolean showSpinner) {
+        if (showSpinner == false) {
+            parentRecyclerView.setVisibility(View.VISIBLE);
+            progressBarMain.setVisibility(View.GONE);
+            fetchingDataMain.setVisibility(View.GONE);
+        }
+        else {
+            parentRecyclerView.setVisibility(View.GONE);
+            progressBarMain.setVisibility(View.VISIBLE);
+            fetchingDataMain.setVisibility(View.VISIBLE);
+        }
+        sendAboutGetRequest(ticker);
     }
 
     void sendAboutGetRequest(String stock) {
+        Log.e("about()", "sendAboutGetRequest: entered about getRequest() for" + stock);
         String url = "http://trialnodejsbackend-env.eba-stk2e7fk.us-east-1.elasticbeanstalk.com/company-details?companyName="+stock;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -44,6 +82,8 @@ class StockListingDataModel {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     companyName = jsonObject.getString("name");
+                    Log.e("about()", "onResponse: about received for " + stock);
+                    requestCounter.decrementAndGet(); // 0 again at object level, but maybe not at class level.
                     sendLatestPriceGetRequest(ticker);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -55,10 +95,15 @@ class StockListingDataModel {
                 Log.e("About Get Req Failed Error", "onErrorResponse: " + error.toString() );
             }
         });
-        requestQueue.add(stringRequest);
+
+        if (companyName == null) {
+            requestCounter.addAndGet(1);
+            requestQueue.add(stringRequest);
+        }
     }
 
     void sendLatestPriceGetRequest(String stock) {
+        Log.e("price()", "sendLatestPriceGetRequest: " + stock );
         String url = "http://trialnodejsbackend-env.eba-stk2e7fk.us-east-1.elasticbeanstalk.com/latest-price?companyName="+stock;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -72,7 +117,8 @@ class StockListingDataModel {
 
                     currentPrice = String.valueOf(last);
                     change = _change;
-
+                    Log.e("price()", "onResponse: price received for  " + stock);
+                    requestCounter.decrementAndGet(); // 0 again at object level, but at class level no.
                     setNoOfShares(ticker);
 
                 } catch (JSONException e) {
@@ -85,7 +131,9 @@ class StockListingDataModel {
 
             }
         });
+        requestCounter.addAndGet(1);
         requestQueue.add(stringRequest);
+        Log.e("price()", "sendLatestPriceGetRequest: price request added to queue for " + stock );
     }
 
     void setNoOfShares(String stock) {
@@ -97,8 +145,18 @@ class StockListingDataModel {
         else {
             noOfShares = companyName;
         }
-        parentRecyclerView.getAdapter().notifyDataSetChanged();
 
+        Log.e("sdfs", "setNoOfShares: requestCounter = " + requestCounter );
+
+        modelLoaded = true;
+        if (requestCounter.get() == 0) {
+            progressBarMain.setVisibility(View.GONE);
+            fetchingDataMain.setVisibility(View.GONE);
+            parentRecyclerView.setVisibility(View.VISIBLE);
+
+            Log.e("sdfg", "setNoOfShares: request counter set to 0");
+        }
+        parentRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
 }

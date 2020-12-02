@@ -14,6 +14,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,9 +32,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
@@ -45,13 +45,16 @@ public class MainActivity extends AppCompatActivity {
     private AutoSuggestAdapter autoSuggestAdapter;
     private ProgressBar progressBarMain;
     TextView fetchingDataMain;
+    private Handler handler;
+    public static final long DEFAULT_INTERVAL = 30 * 1000;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.Theme_Stocks);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
         super.onCreate(savedInstanceState);
+        setTheme(R.style.Theme_Stocks);
         setContentView(R.layout.activity_main);
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
@@ -68,27 +71,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(dividerItemDecoration);
         //recyclerView.setVisibility(View.GONE);
 
-        /*Set<String> portfolioSet = getPortfolio();
-        Set<String> favoritesSet = getFavorites();
-
-        ArrayList<String> portfolioList, favoritesList;
-
-        if (portfolioSet != null) {
-            portfolioList = new ArrayList<>(portfolioSet);
-        }
-        else {
-            portfolioList = new ArrayList<>();
-        }
-
-        if (favoritesSet != null) {
-            favoritesList = new ArrayList<>(favoritesSet);
-        }
-        else {
-            favoritesList = new ArrayList<>();
-        }*/
-        ArrayList<String> portfolioList = null, favoritesList = null;
-        portfolio = new PortfolioSection(this, recyclerView, portfolioList);
-        watchlist = new WatchlistSection(this, recyclerView, portfolio, favoritesList);
+        //ArrayList<String> portfolioList = null, favoritesList = null;
+        portfolio = new PortfolioSection(this, recyclerView, progressBarMain, fetchingDataMain);
+        watchlist = new WatchlistSection(this, recyclerView, portfolio, progressBarMain, fetchingDataMain);
         Footer footer = new Footer();
 
         sectionAdapter.addSection(portfolio);
@@ -105,11 +90,33 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.getAdapter().notifyDataSetChanged();
 
-        //recyclerView.setVisibility(View.VISIBLE);
-        progressBarMain.setVisibility(View.GONE);
-        fetchingDataMain.setVisibility(View.GONE);
+        sharedPreferences = getApplicationContext().getSharedPreferences("stock_app", 0);
+        editor = sharedPreferences.edit();
 
+        editor.putBoolean("first_time_loaded", true);
+        editor.commit();
+
+        //recyclerView.setVisibility(View.VISIBLE);
+        //progressBarMain.setVisibility(View.GONE);
+        //fetchingDataMain.setVisibility(View.GONE);
+        //handler = new Handler();
     }
+
+    private Runnable runnableService = new Runnable() {
+        @Override
+        public void run() {
+            // create task here
+
+            for (StockListingDataModel model: portfolio.getPortfolio()) {
+                model.updateValues(false);
+            }
+            for (StockListingDataModel model: watchlist.getWatchlist()) {
+                model.updateValues(false);
+            }
+
+            handler.postDelayed(runnableService, DEFAULT_INTERVAL);
+        }
+    };
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -131,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String queryString = (String) parent.getItemAtPosition(position);
-                Toast.makeText(view.getContext(), "clicked", Toast.LENGTH_SHORT).show();
                 searchAutoComplete.setText("" + queryString);
 
                 String ticker = queryString.split("-")[0].trim();
@@ -178,8 +184,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         Log.e("asdf", "onStart: CALLED" );
-        watchlist.update();
-        portfolio.update();
+        StockListingDataModel.requestCounter = new AtomicInteger(0);
+        //watchlist.update(); -- updateValues() instead of this in onResume()
+        //portfolio.update();
         super.onStart();
     }
 
@@ -187,8 +194,32 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.e("main", "onResume: main CALLED");
+        boolean showSpinner = false;
+        if (sharedPreferences.getBoolean("first_time_loaded", false) == true)
+        {
+            showSpinner = true;
+            editor.putBoolean("first_time_loaded", false);
+            editor.commit();
+        }
+        else{
+            showSpinner = false;
+        }
+        for (StockListingDataModel model: portfolio.getPortfolio()) {
+            model.updateValues(showSpinner);
+        }
+        for (StockListingDataModel model: watchlist.getWatchlist()) {
+            model.updateValues(showSpinner);
+        }
 
-        recyclerView.getAdapter().notifyItemChanged(1);
+        //handler.postDelayed(runnableService, DEFAULT_INTERVAL);
+        recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e("ada", "onStop: called" );
+        //handler.removeCallbacksAndMessages(runnableService);
     }
 
     private void makeAutoCompleteApiCall(String text) {

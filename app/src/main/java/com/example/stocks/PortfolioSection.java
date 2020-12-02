@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -38,16 +40,20 @@ public class PortfolioSection extends Section {
 
     private RecyclerView parentRecyclerView;
     private Context parentContext;
+    ProgressBar progressBarMain;
+    TextView fetchingDataMain;
 
     /**
      * Create a Section object based on {@link SectionParameters}.
      */
 
-    public PortfolioSection(Context parentContext, RecyclerView recyclerView, ArrayList<String> portfolioList) {
+    public PortfolioSection(Context parentContext, RecyclerView recyclerView, ProgressBar progressBarMain, TextView fetchingDataMain) {
         super(SectionParameters.builder().itemResourceId(R.layout.stock_listing).headerResourceId(R.layout.portfolio_header).build());
         this.parentRecyclerView = recyclerView;
         this.parentContext = parentContext;
         portfolio = new ArrayList<>();
+        this.fetchingDataMain = fetchingDataMain;
+        this.progressBarMain = progressBarMain;
         /*if (portfolioList != null) {
             portfolio = new ArrayList<>();
             for (String stock : portfolioList) {
@@ -208,8 +214,14 @@ public class PortfolioSection extends Section {
                 portfolio = new ArrayList<>();
             }
             for (String stock : portfolioinPref) {
-                portfolio.add(new StockListingDataModel(parentContext, stock, parentRecyclerView));
+                portfolio.add(new StockListingDataModel(parentContext, stock, parentRecyclerView, progressBarMain, fetchingDataMain));
             }
         }
     }
+
+//    void updateValues() {
+//        for(StockListingDataModel model : portfolio) {
+//            model.updateValues();
+//        }
+//    }
 }

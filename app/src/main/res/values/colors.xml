@@ -15,4 +15,7 @@
     <color name="green">#0D9D0D </color>
     <color name="red">#C10B0B </color>
     <color name="button_grey">#E0E0E0</color>
+    <color name="colorPrimary"> #AAAAAA </color>
+    <color name="colorPrimaryVariant"> #DFDFDF </color>
+    <color name="splash_screen_bg"> #F2F2F4 </color>
 </resources>
