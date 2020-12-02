@@ -207,6 +207,12 @@ public class MainActivity extends AppCompatActivity {
             watchlist.update();
             portfolio.update();
         }
+
+        if (watchlistInPref.size() == 0 && portfolioInPref.size() == 0) {
+            recyclerView.setVisibility(View.VISIBLE);
+            fetchingDataMain.setVisibility(View.GONE);
+            progressBarMain.setVisibility(View.GONE);
+        }
         /*else {
             for (StockListingDataModel model: portfolio.getPortfolio()) {
                 model.updateValues(showSpinner);
