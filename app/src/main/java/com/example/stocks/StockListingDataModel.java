@@ -28,7 +28,9 @@ class StockListingDataModel {
     double change;
     String noOfShares;
     static RequestQueue requestQueue = null;
-    static AtomicInteger requestCounter = new AtomicInteger(0);
+    //static AtomicInteger requestCounter = new AtomicInteger(0);
+    static int requestCounter = 0;
+    static int count = 0;
     Context parentContext;
     String ticker;
     ProgressBar progressBarMain;
@@ -75,7 +77,7 @@ class StockListingDataModel {
     }
 
     void sendAboutGetRequest(String stock) {
-        Log.e("about()", "sendAboutGetRequest: entered about getRequest() for" + stock);
+        //Log.e("about()", "sendAboutGetRequest: entered about getRequest() for" + stock);
         String url = "http://trialnodejsbackend-env.eba-stk2e7fk.us-east-1.elasticbeanstalk.com/company-details?companyName="+stock;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -84,7 +86,9 @@ class StockListingDataModel {
                     JSONObject jsonObject = new JSONObject(response);
                     companyName = jsonObject.getString("name");
                     Log.e("about()", "onResponse: about received for " + stock);
-                    requestCounter.decrementAndGet(); // 0 again at object level, but maybe not at class level.
+                    //requestCounter.decrementAndGet(); // 0 again at object level, but maybe not at class level.
+                    //requestCounter--;
+                    count++;
                     sendLatestPriceGetRequest(ticker);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -98,7 +102,8 @@ class StockListingDataModel {
         });
 
         if (companyName == null) {
-            requestCounter.addAndGet(1);
+            //requestCounter.addAndGet(1);
+            //requestCounter++;
             requestQueue.add(stringRequest);
         }
         else {
@@ -107,7 +112,7 @@ class StockListingDataModel {
     }
 
     void sendLatestPriceGetRequest(String stock) {
-        Log.e("price()", "sendLatestPriceGetRequest: " + stock );
+        //Log.e("price()", "sendLatestPriceGetRequest: " + stock );
         String url = "http://trialnodejsbackend-env.eba-stk2e7fk.us-east-1.elasticbeanstalk.com/latest-price?companyName="+stock;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -119,10 +124,12 @@ class StockListingDataModel {
                     double prevClose = Double.parseDouble(jsonObject.getString("prevClose"));
                     double _change = last - prevClose;
 
-                    currentPrice = String.valueOf(last);
+                    currentPrice = String.format("%.2f", last);
                     change = _change;
                     Log.e("price()", "onResponse: price received for  " + stock);
-                    requestCounter.decrementAndGet(); // 0 again at object level, but at class level no.
+                    //requestCounter.decrementAndGet(); // 0 again at object level, but at class level no.
+                    //requestCounter--;
+                    count++;
                     setNoOfShares(ticker);
 
                 } catch (JSONException e) {
@@ -135,9 +142,9 @@ class StockListingDataModel {
 
             }
         });
-        requestCounter.addAndGet(1);
+        //requestCounter.addAndGet(1);
+        //requestCounter++;
         requestQueue.add(stringRequest);
-        Log.e("price()", "sendLatestPriceGetRequest: price request added to queue for " + stock );
     }
 
     void setNoOfShares(String stock) {
@@ -150,15 +157,16 @@ class StockListingDataModel {
             noOfShares = companyName;
         }
 
-        Log.e("sdfs", "setNoOfShares: requestCounter = " + requestCounter );
+        //Log.e("sdfs", "setNoOfShares: requestCounter = " + requestCounter );
 
         modelLoaded = true;
-        if (requestCounter.get() == 0) {
+        Log.w("Adasd", "setNoOfShares: count = " + count + ", requestCounter = " + requestCounter);
+        if (/*requestCounter.get() requestCounter == 0*/ count >= requestCounter) {
             progressBarMain.setVisibility(View.GONE);
             fetchingDataMain.setVisibility(View.GONE);
             parentRecyclerView.setVisibility(View.VISIBLE);
 
-            Log.e("sdfg", "setNoOfShares: request counter set to 0");
+            Log.e("sdfg", "setNoOfShares: count >= requestCounter = " + count);
         }
         parentRecyclerView.getAdapter().notifyDataSetChanged();
     }

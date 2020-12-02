@@ -203,6 +203,9 @@ public class PortfolioSection extends Section {
     }
 
     void update() {
+        parentRecyclerView.setVisibility(View.GONE);
+        fetchingDataMain.setVisibility(View.VISIBLE);
+        progressBarMain.setVisibility(View.VISIBLE);
         SharedPreferences sharedPreferences = parentContext.getSharedPreferences("stock_app", 0);
         Log.d("asdsf", "update: update in port called");
         Set<String> portfolioinPref = sharedPreferences.getStringSet("portfolio", null);

@@ -104,15 +104,11 @@ public class MainActivity extends AppCompatActivity {
         handler = new Handler();
     }
 
-    Runnable runnableService = new Runnable() {
-
-        private boolean KILL = false;
-
+    GetPriceRunnable runnableService = new GetPriceRunnable() {
         @Override
         public void run() {
             // create task here
-
-            if (!KILL) {
+            if(!KILL) {
                 for (StockListingDataModel model: portfolio.getPortfolio()) {
                     model.updateValues(false);
                 }
@@ -121,11 +117,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 handler.postDelayed(runnableService, DEFAULT_INTERVAL);
             }
-
-        }
-
-        public void killRunnable() {
-            KILL = true;
         }
     };
 
@@ -183,9 +174,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         Log.e("asdf", "onStart: CALLED" );
-        StockListingDataModel.requestCounter = new AtomicInteger(0);
+        //StockListingDataModel.requestCounter = new AtomicInteger(0);
+
+
         //watchlist.update(); -- updateValues() instead of this in onResume()
         //portfolio.update();
+
         super.onStart();
     }
 
@@ -206,21 +200,24 @@ public class MainActivity extends AppCompatActivity {
 
         Set<String> portfolioInPref = sharedPreferences.getStringSet("portfolio", new HashSet<>());
         Set<String> watchlistInPref = sharedPreferences.getStringSet("favorites", new HashSet<>());
-
-        if (watchlistInPref != null && portfolioInPref != null && watchlistInPref.size() != watchlist.getWatchlist().size() || portfolioInPref.size() != portfolio.getPortfolio().size()) {
+        StockListingDataModel.requestCounter = (portfolioInPref.size() + watchlistInPref.size()) * 2;
+        StockListingDataModel.count = 0;
+        if (watchlistInPref.size() != watchlist.getWatchlist().size() || portfolioInPref.size() != portfolio.getPortfolio().size()) {
+            Log.e("dffa", "onResume: lists updated, so entered if condiditon." );
             watchlist.update();
             portfolio.update();
         }
-        else {
+        /*else {
             for (StockListingDataModel model: portfolio.getPortfolio()) {
                 model.updateValues(showSpinner);
             }
             for (StockListingDataModel model: watchlist.getWatchlist()) {
                 model.updateValues(showSpinner);
             }
-        }
+        }*/
 
-        handler.postDelayed(runnableService, DEFAULT_INTERVAL);
+        runnableService.enableTask();
+        handler.postDelayed(runnableService, 1*1000);
         recyclerView.getAdapter().notifyDataSetChanged();
     }
 
@@ -228,8 +225,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Log.e("ada", "onStop: called" );
+        runnableService.killTask();
         handler.removeCallbacksAndMessages(runnableService);
-        handler = null;
     }
 
     private void makeAutoCompleteApiCall(String text) {

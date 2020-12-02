@@ -50,6 +50,9 @@ public class WatchlistSection extends Section {
     }
 
     void update() {
+        parentRecyclerView.setVisibility(View.GONE);
+        fetchingDataMain.setVisibility(View.VISIBLE);
+        progressBarMain.setVisibility(View.VISIBLE);
         SharedPreferences sharedPreferences = parentContext.getSharedPreferences("stock_app", 0);
         //SharedPreferences.Editor editor = sharedPreferences.edit();
         Log.d("asdsf", "update: update in fav called");
