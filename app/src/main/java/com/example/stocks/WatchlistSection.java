@@ -55,9 +55,9 @@ public class WatchlistSection extends Section {
         progressBarMain.setVisibility(View.VISIBLE);
         SharedPreferences sharedPreferences = parentContext.getSharedPreferences("stock_app", 0);
         //SharedPreferences.Editor editor = sharedPreferences.edit();
-        Log.d("asdsf", "update: update in fav called");
+        //Log.d("asdsf", "update: update in fav called");
         Set<String> favoritesInPref = sharedPreferences.getStringSet("favorites", null);
-        Log.e("fav in watchlist.update()", "update: " + favoritesInPref );
+        //Log.e("fav in watchlist.update()", "update: " + favoritesInPref );
         if (favoritesInPref != null) {
             if(watchlist == null) {
                 watchlist = new ArrayList<>();

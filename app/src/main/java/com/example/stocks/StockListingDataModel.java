@@ -46,14 +46,14 @@ class StockListingDataModel {
         this.progressBarMain = progressBarMain;
         this.fetchingDataMain = fetchingDataMain;
         this.ticker = ticker;
-        Log.e("constructor", "StockListingDataModel: entered constructor for " + ticker);
+        //Log.e("constructor", "StockListingDataModel: entered constructor for " + ticker);
         this.parentRecyclerView = parentRecyclerView;
         companyName = null;
         update(this.ticker);
     }
 
     void update(String ticker) {
-        Log.e("update()", "update: entered update for " + ticker);
+        //Log.e("update()", "update: entered update for " + ticker);
         modelLoaded = false;
         parentRecyclerView.setVisibility(View.GONE); // set it back to gone.
         progressBarMain.setVisibility(View.VISIBLE);
@@ -62,7 +62,7 @@ class StockListingDataModel {
     }
 
     void updateValues(boolean showSpinner) {
-        Log.e("fd", "updateValues: entered updateValues() for " + ticker);
+        //Log.e("fd", "updateValues: entered updateValues() for " + ticker);
         if (showSpinner == false) {
             parentRecyclerView.setVisibility(View.VISIBLE);
             progressBarMain.setVisibility(View.GONE);
@@ -85,7 +85,7 @@ class StockListingDataModel {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     companyName = jsonObject.getString("name");
-                    Log.e("about()", "onResponse: about received for " + stock);
+                    //Log.e("about()", "onResponse: about received for " + stock);
                     //requestCounter.decrementAndGet(); // 0 again at object level, but maybe not at class level.
                     //requestCounter--;
                     count++;
@@ -126,7 +126,7 @@ class StockListingDataModel {
 
                     currentPrice = String.format("%.2f", last);
                     change = _change;
-                    Log.e("price()", "onResponse: price received for  " + stock);
+                    Log.e("price()", "onResponse: New Price received for  " + stock + " - " + currentPrice);
                     //requestCounter.decrementAndGet(); // 0 again at object level, but at class level no.
                     //requestCounter--;
                     count++;
@@ -160,13 +160,13 @@ class StockListingDataModel {
         //Log.e("sdfs", "setNoOfShares: requestCounter = " + requestCounter );
 
         modelLoaded = true;
-        Log.w("Adasd", "setNoOfShares: count = " + count + ", requestCounter = " + requestCounter);
+        //Log.w("Adasd", "setNoOfShares: count = " + count + ", requestCounter = " + requestCounter);
         if (/*requestCounter.get() requestCounter == 0*/ count >= requestCounter) {
             progressBarMain.setVisibility(View.GONE);
             fetchingDataMain.setVisibility(View.GONE);
             parentRecyclerView.setVisibility(View.VISIBLE);
 
-            Log.e("sdfg", "setNoOfShares: count >= requestCounter = " + count);
+            //Log.e("sdfg", "setNoOfShares: count >= requestCounter = " + count);
         }
         parentRecyclerView.getAdapter().notifyDataSetChanged();
     }

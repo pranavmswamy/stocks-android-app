@@ -54,80 +54,9 @@ public class PortfolioSection extends Section {
         portfolio = new ArrayList<>();
         this.fetchingDataMain = fetchingDataMain;
         this.progressBarMain = progressBarMain;
-        /*if (portfolioList != null) {
-            portfolio = new ArrayList<>();
-            for (String stock : portfolioList) {
-                portfolio.add(new StockListingDataModel(parentContext, stock));
-            }
-        }*/
+
         update();
     }
-
-    /*StockListingDataModel portfolioItemFactoryMethod(String stock) {
-        final String[] companyName = new String[1];
-        final String[] currentPrice = new String[1];
-        final String[] noOfShares = new String[1];
-        final double[] change = new double[1];
-
-        String aboutUrl = "http://trialnodejsbackend-env.eba-stk2e7fk.us-east-1.elasticbeanstalk.com/company-details?companyName="+stock;
-        String priceUrl = "http://trialnodejsbackend-env.eba-stk2e7fk.us-east-1.elasticbeanstalk.com/latest-price?companyName="+stock;
-
-        StringRequest aboutRequest = new StringRequest(Request.Method.GET, aboutUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                // chaining level 1 starts
-                try {
-
-                    JSONObject jsonObject = new JSONObject(response);
-                    companyName[0] = jsonObject.getString("name");
-
-                    // chaining level 2 starts
-                    StringRequest priceRequest = new StringRequest(Request.Method.GET, priceUrl, new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-
-                                JSONObject jsonObject = new JSONObject(response);
-                                currentPrice[0] = jsonObject.getString("last");
-                                change[0] = Double.parseDouble(jsonObject.getString("last")) - Double.parseDouble(jsonObject.getString("prevClose"));
-
-                                // chaining level 3 starts.
-                                SharedPreferences sharedPreferences = parentContext.getSharedPreferences("stock_app", 0);
-                                int noOfSharesBought = sharedPreferences.getInt(stock+"_qty", -1);
-                                if (noOfSharesBought < 0) {
-                                    noOfShares[0] = companyName[0];
-                                }
-                                else {
-                                    noOfShares[0] = noOfSharesBought + " shares";
-                                }
-
-                                // need price, name, change, noOfSharesBought or name of company
-                                StockListingDataModel stockListing = new StockListingDataModel(companyName[0], currentPrice[0], change[0], noOfShares[0]);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-
-                        }
-                    });
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("About Get Req Failed Error", "onErrorResponse: " + error.toString() );
-            }
-        });
-
-        return stockListing;
-    }*/
 
     @Override
     public int getContentItemsTotal() {
@@ -207,9 +136,9 @@ public class PortfolioSection extends Section {
         fetchingDataMain.setVisibility(View.VISIBLE);
         progressBarMain.setVisibility(View.VISIBLE);
         SharedPreferences sharedPreferences = parentContext.getSharedPreferences("stock_app", 0);
-        Log.d("asdsf", "update: update in port called");
+        //Log.d("asdsf", "update: update in port called");
         Set<String> portfolioinPref = sharedPreferences.getStringSet("portfolio", null);
-        Log.e("portfolio in portfolio.update()", "update: " + portfolioinPref );
+        //Log.e("portfolio in portfolio.update()", "update: " + portfolioinPref );
         if (portfolioinPref != null) {
             if (portfolio != null) {
                 portfolio.clear();
