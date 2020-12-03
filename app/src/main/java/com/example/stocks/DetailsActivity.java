@@ -130,6 +130,7 @@ public class DetailsActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if(bundle != null) {
             stock = (String) bundle.get("stock");
+            stock = stock.toLowerCase();
             watchlist = (ArrayList<StockListingDataModel>) bundle.get("favorites");
             portfolio = (ArrayList<StockListingDataModel>) bundle.get("portfolio");
             stockName.setText(stock.toUpperCase());

@@ -49,7 +49,7 @@ class StockListingDataModel {
         //Log.e("constructor", "StockListingDataModel: entered constructor for " + ticker);
         this.parentRecyclerView = parentRecyclerView;
         companyName = null;
-        update(this.ticker);
+        update(this.ticker.toLowerCase());
     }
 
     void update(String ticker) {
