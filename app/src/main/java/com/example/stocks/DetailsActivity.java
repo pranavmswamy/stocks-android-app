@@ -415,7 +415,13 @@ public class DetailsActivity extends AppCompatActivity {
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         if (s.toString().length() > 0) {
-                            amountCalc.setText(Double.parseDouble(s.toString()) + " x $" + currentPrice.getText() + "/share = $" + String.format("%.2f", Double.parseDouble(currentPrice.getText().toString())*Double.parseDouble(s.toString())));
+                            try {
+                                amountCalc.setText(Double.parseDouble(s.toString()) + " x $" + currentPrice.getText() + "/share = $" + String.format("%.2f", Double.parseDouble(currentPrice.getText().toString())*Double.parseDouble(s.toString())));
+                            }
+                            catch (Exception e) {
+                                Toast.makeText(v.getContext(), "Please enter valid amount", Toast.LENGTH_SHORT).show();
+                                amountCalc.setText("0 x $" + currentPrice.getText() + "/share = $0.00");
+                            }
                         }
                         else {
                             amountCalc.setText("0 x $" + currentPrice.getText() + "/share = $0.00");
