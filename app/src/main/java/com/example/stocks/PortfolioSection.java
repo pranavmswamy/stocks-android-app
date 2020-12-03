@@ -120,10 +120,10 @@ public class PortfolioSection extends Section {
         double amountRemaining = sharedPreferences.getFloat("amountRemaining", -1.0f);
         if (amountRemaining < 0) {
             // opened app for first time, not traded. set amount = 20000
-            editor.putFloat("amountRemaining", 20000.0f);
+            editor.putFloat("amountRemaining", 20000.00f);
         }
         editor.commit();
-        headerHolder.getAmount().setText("" + sharedPreferences.getFloat("amountRemaining", -1.0f));
+        headerHolder.getAmount().setText(String.format("%.2f", sharedPreferences.getFloat("amountRemaining", -1.0f)));
 
     }
 

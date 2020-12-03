@@ -18,9 +18,9 @@
             android:id="@+id/date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="January 1, 1970"
-            android:textSize="18sp"
             android:paddingStart="8dp"
+            android:text="January 1, 1970"
+            android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -60,9 +60,9 @@
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="NET WORTH"
+            android:text="Net Worth"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/amount"
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:text="Amount"
             android:textColor="@color/black"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
 

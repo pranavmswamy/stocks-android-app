@@ -166,7 +166,7 @@ public class DetailsActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    currentPrice.setText(String.format("%.2f", Double.parseDouble(jsonObject.getString("last"))));
+                    currentPrice.setText(jsonObject.getString("last"));
                     openPrice.setText(jsonObject.getString("open"));
                     volume.setText(jsonObject.getString("volume"));
                     low.setText(jsonObject.getString("low"));
@@ -203,6 +203,7 @@ public class DetailsActivity extends AppCompatActivity {
                     bidPrice.setText(String.format("%.2f", Double.parseDouble(bidPrice.getText().toString())));
                     mid.setText(String.format("%.2f", Double.parseDouble(mid.getText().toString())));
                     high.setText(String.format("%.2f", Double.parseDouble(high.getText().toString())));
+                    price.setText(String.format("$%.2f", Double.parseDouble(price.getText().toString())));
 
 
 
@@ -399,7 +400,8 @@ public class DetailsActivity extends AppCompatActivity {
                 TextView amountRemaining = customView.findViewById(R.id.amountRemaining);
                 TextView amountCalc = customView.findViewById(R.id.amountCalculation);
 
-                amountCalc.setText(Double.parseDouble(noOfShares.getText().toString()) + " x $" + price.getText() + "/share = $" + String.format("%.2f", Double.parseDouble(price.getText().toString())*Double.parseDouble(noOfShares.getText().toString())));
+                //amountCalc.setText(Double.parseDouble(noOfShares.getText().toString()) + " x $" + price.getText() + "/share = $" + String.format("%.2f", Double.parseDouble(price.getText().toString())*Double.parseDouble(noOfShares.getText().toString())));
+                amountCalc.setText("0 x $" + currentPrice.getText() + "/share = $0.00");
 
                 amountRemaining.setText("You have $" + sharedPreferences.getFloat("amountRemaining", 0) + " to buy " + stock.toUpperCase());
 
@@ -413,10 +415,10 @@ public class DetailsActivity extends AppCompatActivity {
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         if (s.toString().length() > 0) {
-                            amountCalc.setText(Double.parseDouble(s.toString()) + " x $" + price.getText() + "/share = $" + String.format("%.2f", Double.parseDouble(price.getText().toString())*Double.parseDouble(s.toString())));
+                            amountCalc.setText(Double.parseDouble(s.toString()) + " x $" + currentPrice.getText() + "/share = $" + String.format("%.2f", Double.parseDouble(currentPrice.getText().toString())*Double.parseDouble(s.toString())));
                         }
                         else {
-                            amountCalc.setText("0 x $" + price.getText() + "/share = $0.00");
+                            amountCalc.setText("0 x $" + currentPrice.getText() + "/share = $0.00");
                         }
                     }
 
@@ -464,10 +466,10 @@ public class DetailsActivity extends AppCompatActivity {
 
                         double amountRemaining = sharedPreferences.getFloat("amountRemaining", -1.0f);
 
-                        if (qtyEntered > 0 && Double.parseDouble(price.getText().toString())*qtyEntered <= amountRemaining) {
+                        if (qtyEntered > 0 && Double.parseDouble(currentPrice.getText().toString())*qtyEntered <= amountRemaining) {
                             // buy
                             float updatedQuantity = qtyEntered + qtyInPortfolio;
-                            double cost = qtyEntered*Double.parseDouble(price.getText().toString());
+                            double cost = qtyEntered*Double.parseDouble(currentPrice.getText().toString());
                             double updatedAmountRemaining = amountRemaining - cost;
 
                             editor.putFloat(stock+"_qty", updatedQuantity);
@@ -497,7 +499,7 @@ public class DetailsActivity extends AppCompatActivity {
                         else if (qtyEntered <= 0) {
                             Toast.makeText(v.getContext(), "Cannot buy less than 0 shares", Toast.LENGTH_SHORT).show();
                         }
-                        else if (Double.parseDouble(price.getText().toString())*qtyEntered > amountRemaining) {
+                        else if (Double.parseDouble(currentPrice.getText().toString())*qtyEntered > amountRemaining) {
                             Toast.makeText(v.getContext(), "Not enough money to buy", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -515,11 +517,11 @@ public class DetailsActivity extends AppCompatActivity {
                         }
 
                         double amountRemaining = sharedPreferences.getFloat("amountRemaining", -1.0f);
-                        double currentPrice = Double.parseDouble(price.getText().toString());
+                        double _currentPrice = Double.parseDouble(currentPrice.getText().toString());
 
                         if (qtyEntered > 0 && qtyEntered <= qtyInPortfolio) {
                             // sell
-                            double earned = qtyEntered * currentPrice;
+                            double earned = qtyEntered * _currentPrice;
                             double updatedAmountRemaining = amountRemaining + earned;
                             float updatedQuantity = qtyInPortfolio - qtyEntered;
 

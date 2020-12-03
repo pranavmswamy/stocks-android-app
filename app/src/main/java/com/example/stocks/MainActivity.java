@@ -140,10 +140,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String queryString = (String) parent.getItemAtPosition(position);
-                searchAutoComplete.setText("" + queryString);
+                //searchAutoComplete.setText("" + queryString);
+                searchAutoComplete.setText(queryString.trim());
 
                 String ticker = queryString.split("-")[0].trim();
-                searchAutoComplete.setText(ticker);
 
                 //open activity.
                 Intent detailsIntent = new Intent(view.getContext(), DetailsActivity.class);
