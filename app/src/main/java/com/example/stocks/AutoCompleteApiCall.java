@@ -37,7 +37,7 @@ public class AutoCompleteApiCall {
     }
 
     public static void make(Context ctx, String query, Response.Listener<String> listener, Response.ErrorListener errorListener) {
-        String url = "http://trialnodejsbackend-env.eba-stk2e7fk.us-east-1.elasticbeanstalk.com/autocomplete?query=" + query;
+        String url = "https://us-west2-stocks-app-backend.cloudfunctions.net/autocomplete?query=" + query;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, listener, errorListener);
         AutoCompleteApiCall.getInstance(ctx).addToRequestQueue(stringRequest);
     }

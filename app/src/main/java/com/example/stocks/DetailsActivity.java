@@ -160,7 +160,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     void sendLatestPriceGetRequest() {
-        String url = "http://trialnodejsbackend-env.eba-stk2e7fk.us-east-1.elasticbeanstalk.com/latest-price?companyName="+stock;
+        String url = "https://us-west2-stocks-app-backend.cloudfunctions.net/latest-price?companyName="+stock;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -224,7 +224,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     void sendAboutGetRequest() {
-        String url = "http://trialnodejsbackend-env.eba-stk2e7fk.us-east-1.elasticbeanstalk.com/company-details?companyName="+stock;
+        String url = "https://us-west2-stocks-app-backend.cloudfunctions.net/company-details?companyName="+stock;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -285,7 +285,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     void sendNewsGetRequest() {
-        String url = "http://trialnodejsbackend-env.eba-stk2e7fk.us-east-1.elasticbeanstalk.com/news?q=" + stock;
+        String url = "https://us-west2-stocks-app-backend.cloudfunctions.net/getNews?q=" + stock;
         //Log.e("url", "sendNewsGetRequest: " + url );
         ArrayList<NewsDataModel> newsArray = new ArrayList<>();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {

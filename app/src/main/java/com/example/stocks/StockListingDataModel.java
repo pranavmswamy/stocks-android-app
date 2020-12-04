@@ -78,7 +78,7 @@ class StockListingDataModel {
 
     void sendAboutGetRequest(String stock) {
         //Log.e("about()", "sendAboutGetRequest: entered about getRequest() for" + stock);
-        String url = "http://trialnodejsbackend-env.eba-stk2e7fk.us-east-1.elasticbeanstalk.com/company-details?companyName="+stock;
+        String url = "https://us-west2-stocks-app-backend.cloudfunctions.net/company-details?companyName="+stock;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -113,7 +113,7 @@ class StockListingDataModel {
 
     void sendLatestPriceGetRequest(String stock) {
         //Log.e("price()", "sendLatestPriceGetRequest: " + stock );
-        String url = "http://trialnodejsbackend-env.eba-stk2e7fk.us-east-1.elasticbeanstalk.com/latest-price?companyName="+stock;
+        String url = "https://us-west2-stocks-app-backend.cloudfunctions.net/latest-price?companyName="+stock;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
