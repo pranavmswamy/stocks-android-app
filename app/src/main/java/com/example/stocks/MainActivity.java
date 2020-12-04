@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBarMain;
     TextView fetchingDataMain;
     private Handler handler;
-    public static final long DEFAULT_INTERVAL = 15 * 1000;
+    public static final long DEFAULT_INTERVAL = 45 * 1000;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
 
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         autoSuggestAdapter = new AutoSuggestAdapter(this, android.R.layout.simple_dropdown_item_1line);
         searchAutoComplete.setAdapter(autoSuggestAdapter);
 
-        Log.e("main", "onCreateOptionsMenu: in autocomplete" );
+        //Log.e("main", "onCreateOptionsMenu: in autocomplete" );
 
         searchAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("main", "onResume: main CALLED");
+        //Log.e("main", "onResume: main CALLED");
         boolean showSpinner = false;
         if (sharedPreferences.getBoolean("first_time_loaded", false) == true)
         {
@@ -204,12 +204,12 @@ public class MainActivity extends AppCompatActivity {
         Set<String> portfolioInPref = sharedPreferences.getStringSet("portfolio", new HashSet<>());
         Set<String> watchlistInPref = sharedPreferences.getStringSet("favorites", new HashSet<>());
 
-        Log.e("adfsdf", "favorites in shared pref on OnResume - " + watchlistInPref);
+        //Log.e("adfsdf", "favorites in shared pref on OnResume - " + watchlistInPref);
 
         StockListingDataModel.requestCounter = (portfolioInPref.size() + watchlistInPref.size()) * 2;
         StockListingDataModel.count = 0;
         if (watchlistInPref.size() != watchlist.getWatchlist().size() || portfolioInPref.size() != portfolio.getPortfolio().size()) {
-            Log.e("dffa", "onResume: lists updated, so entered if condiditon." );
+            //Log.e("dffa", "onResume: lists updated, so entered if condiditon." );
             watchlist.update();
             portfolio.update();
         }
@@ -236,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.e("ada", "onStop: called" );
+        //Log.e("ada", "onStop: called" );
         runnableService.killTask();
         handler.removeCallbacksAndMessages(runnableService);
     }

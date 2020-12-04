@@ -59,14 +59,14 @@ public class SwipeAndMoveCallback extends ItemTouchHelper.Callback {
         int fromPosition = viewHolder.getAdapterPosition();
         int toPosition = target.getAdapterPosition();
 
-        Log.e("tag", "fromPosition = " + fromPosition);
-        Log.e("tag", "toPosition = " + toPosition);
+        //Log.e("tag", "fromPosition = " + fromPosition);
+        //Log.e("tag", "toPosition = " + toPosition);
 
         if(fromPosition <= portfolio.size() &&
                 fromPosition > 0 &&
                 toPosition > 0 &&
                 toPosition <= portfolio.size()) {
-            Log.e("tag", "Entered if condition in portfolio section" );
+            //Log.e("tag", "Entered if condition in portfolio section" );
             Collections.swap(portfolio, fromPosition-1, toPosition-1);
             parentRecyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
             return true;
@@ -76,7 +76,7 @@ public class SwipeAndMoveCallback extends ItemTouchHelper.Callback {
                 toPosition < watchlist.size() + portfolio.size() + 2 &&
                 toPosition > portfolio.size() + 1 &&
                 fromPosition < watchlist.size() + portfolio.size() + 2) {
-            Log.e("tag", "Entered if condition in watchlist section" );
+            //Log.e("tag", "Entered if condition in watchlist section" );
             Collections.swap(watchlist, fromPosition - portfolio.size() - 2, toPosition - portfolio.size() - 2);
             parentRecyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
             return true;
@@ -94,7 +94,7 @@ public class SwipeAndMoveCallback extends ItemTouchHelper.Callback {
 
             switch (direction) {
                 case ItemTouchHelper.LEFT:
-                    Log.e("tag", "onSwiped: "+"item being removed" );
+                    //Log.e("tag", "onSwiped: "+"item being removed" );
 
                     SharedPreferences sharedPreferences = mContext.getSharedPreferences("stock_app", 0);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -104,7 +104,7 @@ public class SwipeAndMoveCallback extends ItemTouchHelper.Callback {
                     editor.putStringSet("favorites", watchlistSetSharedPref);
                     editor.commit();
 
-                    Log.e("adfa", "onSwiped: after removal " + watchlistSetSharedPref );
+                    //Log.e("adfa", "onSwiped: after removal " + watchlistSetSharedPref );
                     Toast.makeText(mContext, watchlist.get(position - portfolio.size() - 2).ticker.toUpperCase() + " was removed from favorites", Toast.LENGTH_SHORT).show();
                     watchlist.remove( position - portfolio.size() - 2);
                     parentRecyclerView.getAdapter().notifyItemRemoved(position);

@@ -126,7 +126,7 @@ class StockListingDataModel {
 
                     currentPrice = String.format("%.2f", last);
                     change = _change;
-                    Log.e("price()", "onResponse: New Price received for  " + stock + " - " + currentPrice);
+                    //Log.e("price()", "onResponse: New Price received for  " + stock + " - " + currentPrice);
                     //requestCounter.decrementAndGet(); // 0 again at object level, but at class level no.
                     //requestCounter--;
                     count++;

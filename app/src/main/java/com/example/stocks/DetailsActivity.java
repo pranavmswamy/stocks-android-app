@@ -542,7 +542,7 @@ public class DetailsActivity extends AppCompatActivity {
                                     editor.putStringSet("portfolio", portfolio);
                                 }
                                 else {
-                                    Log.e("selling w/o buying", "onClick: Should be unreachable code with usual execution");
+                                    //Log.e("selling w/o buying", "onClick: Should be unreachable code with usual execution");
                                 }
                             }
                             editor.commit();
@@ -610,9 +610,9 @@ public class DetailsActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), stock.toUpperCase() + " was removed from favorites", Toast.LENGTH_SHORT).show();
                 }
                 editor.putStringSet("favorites", favorites);
-                Log.d("favorites:", "onOptionsItemSelected: in mem " + favorites);
+                //Log.d("favorites:", "onOptionsItemSelected: in mem " + favorites);
                 editor.commit();
-                Log.d("favorites:", "onOptionsItemSelected: in sharedPref " + sharedPreferences.getStringSet("favorites", null));
+                //Log.d("favorites:", "onOptionsItemSelected: in sharedPref " + sharedPreferences.getStringSet("favorites", null));
                 favorite = !favorite;
                 return true;
 
