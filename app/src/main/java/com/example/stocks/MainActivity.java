@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBarMain;
     TextView fetchingDataMain;
     private Handler handler;
-    public static final long DEFAULT_INTERVAL = 30 * 1000;
+    public static final long DEFAULT_INTERVAL = 15 * 1000;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
 
@@ -56,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
+
+        for(int i=0; i<Integer.MAX_VALUE/2 ; i++) {}
+
         setTheme(R.style.Theme_Stocks);
         setContentView(R.layout.activity_main);
 
@@ -200,6 +203,9 @@ public class MainActivity extends AppCompatActivity {
 
         Set<String> portfolioInPref = sharedPreferences.getStringSet("portfolio", new HashSet<>());
         Set<String> watchlistInPref = sharedPreferences.getStringSet("favorites", new HashSet<>());
+
+        Log.e("adfsdf", "favorites in shared pref on OnResume - " + watchlistInPref);
+
         StockListingDataModel.requestCounter = (portfolioInPref.size() + watchlistInPref.size()) * 2;
         StockListingDataModel.count = 0;
         if (watchlistInPref.size() != watchlist.getWatchlist().size() || portfolioInPref.size() != portfolio.getPortfolio().size()) {
@@ -223,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
         }*/
 
         runnableService.enableTask();
-        handler.postDelayed(runnableService, 1*1000);
+        handler.postDelayed(runnableService, 1500);
         recyclerView.getAdapter().notifyDataSetChanged();
     }
 

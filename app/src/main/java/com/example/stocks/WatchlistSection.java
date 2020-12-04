@@ -126,7 +126,7 @@ public class WatchlistSection extends Section {
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
         HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
-        headerHolder.getTitle().setText("WATCHLIST");
+        headerHolder.getTitle().setText("FAVORITES");
 
     }
 

@@ -610,8 +610,9 @@ public class DetailsActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), stock.toUpperCase() + " was removed from favorites", Toast.LENGTH_SHORT).show();
                 }
                 editor.putStringSet("favorites", favorites);
-                Log.d("favorites:", "onOptionsItemSelected: " + favorites);
+                Log.d("favorites:", "onOptionsItemSelected: in mem " + favorites);
                 editor.commit();
+                Log.d("favorites:", "onOptionsItemSelected: in sharedPref " + sharedPreferences.getStringSet("favorites", null));
                 favorite = !favorite;
                 return true;
 

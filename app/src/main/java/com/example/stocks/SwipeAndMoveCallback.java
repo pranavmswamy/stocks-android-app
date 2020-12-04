@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -104,11 +105,12 @@ public class SwipeAndMoveCallback extends ItemTouchHelper.Callback {
                     editor.commit();
 
                     Log.e("adfa", "onSwiped: after removal " + watchlistSetSharedPref );
-
+                    Toast.makeText(mContext, watchlist.get(position - portfolio.size() - 2).ticker.toUpperCase() + " was removed from favorites", Toast.LENGTH_SHORT).show();
                     watchlist.remove( position - portfolio.size() - 2);
                     parentRecyclerView.getAdapter().notifyItemRemoved(position);
                     break;
             }
+            parentRecyclerView.getAdapter().notifyDataSetChanged();
         }
         else if(position <= portfolio.size() &&
                 position > 0) {

@@ -17,6 +17,6 @@
         android:layout_marginBottom="5dp"
         android:textColor="@color/colorAccent"
         android:textStyle="bold"
-        tools:text="WATCHLIST" />
+        tools:text="FAVORITES" />
 
 </RelativeLayout>
