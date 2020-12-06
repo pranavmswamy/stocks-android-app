@@ -9,11 +9,14 @@ This application is designed to help you learn and understand how to trade on th
 
 ## Screenshots:
 
-<img src="https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081741.jpg" width="50">
+<img src="https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081741.jpg" width="250">
 
-![](https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081343.jpg =50x)
-![](https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081409.jpg)
-![](https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081453.jpg)
-![](https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081516.jpg)
-![](https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081711.jpg)
-![](https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081741.jpg)
+<img src="https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081343.jpg" width="250">
+
+<img src="https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081409.jpg" width="250">
+
+<img src="https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081453.jpg" width="250">
+
+<img src="https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081516.jpg" width="250">
+
+<img src="https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081711.jpg" width="250">
