@@ -9,7 +9,9 @@ This application is designed to help you learn and understand how to trade on th
 
 ## Screenshots:
 
-![](https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081343.jpg)
+<img src="https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081741.jpg" width="50">
+
+![](https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081343.jpg =50x)
 ![](https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081409.jpg)
 ![](https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081453.jpg)
 ![](https://github.com/pranavmswamy/stocks-android-app/blob/main/screenshots/Screenshot_20201203-081516.jpg)
