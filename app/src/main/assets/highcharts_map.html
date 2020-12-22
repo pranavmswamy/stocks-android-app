@@ -22,7 +22,7 @@
     let curDate = new Date()
     let twoYearsAgo = `${curDate.getFullYear()-2}-${curDate.getMonth()+1}-${curDate.getDate()}`
     console.log('2yrsago-', twoYearsAgo)
-    const historicalDataUrl = `http://trialnodejsbackend-env.eba-stk2e7fk.us-east-1.elasticbeanstalk.com/historical-data?companyName=${ticker}&startDate=${twoYearsAgo}&resampleFreq=${resampleFreq}`
+    const historicalDataUrl = `https://us-west2-stocks-app-backend.cloudfunctions.net/historical-data?companyName=${ticker}&startDate=${twoYearsAgo}&resampleFreq=${resampleFreq}`
     console.log('historical data- ', historicalDataUrl)
 
     Highcharts.getJSON(historicalDataUrl, function (historicalData) {
