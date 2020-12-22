@@ -337,6 +337,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     void loadChart() {
+        Log.e("sdfds", "loadChart: Entered load chart" );
         chart.getSettings().setJavaScriptEnabled(true);
         chart.setWebChromeClient(new WebChromeClient() {
             public boolean onConsoleMessage(ConsoleMessage cm) {
@@ -360,6 +361,9 @@ public class DetailsActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Log.e("sdff", "loadChart: Reached end of method for loading chart");
+
     }
 
     void loadPortfolioSection() {
